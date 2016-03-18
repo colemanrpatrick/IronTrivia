@@ -1,8 +1,10 @@
 package com.IronTrivia.controllers;
 
+import com.IronTrivia.entities.Game;
+import com.IronTrivia.entities.Score;
 import com.IronTrivia.entities.User;
+
 import com.IronTrivia.services.GameRepository;
-import com.IronTrivia.services.ScoreRepository;
 import com.IronTrivia.services.UserRepository;
 import com.IronTrivia.utils.PasswordStorage;
 import org.h2.tools.Server;
@@ -78,7 +80,37 @@ public class IronTriviaController {
     public User getUser(@PathVariable("userName") String userName) {
         return users.findByUserName(userName);
     }
-
     //start of game routes
+    //this route is void, no return type, just let me know if yall want something returned
+    @RequestMapping(path = "/game", method = RequestMethod.POST)
+    public void createGame(@RequestBody List<User> players, @RequestBody Game game) {
+        game = games.save(game);
+        for (User player : players) {
+            User user = users.findByUserName(player.getUserName());//grabbing the player from database
+            scores.save(new Score(user, game));//then creating a score for that user connected to that game
+        }
+    }
+    /*asks for game id creates session for this game for user
+    * since this method returns the game that a session is created for
+    * we probably wont need a separate get method for a single game*/
+    @RequestMapping(path = "/game/{id}", method = RequestMethod.POST)
+    public Game joinGame(@PathVariable("id") int id, HttpSession session) {
+        session.setAttribute("gameId", id);//one liner :)
+        return games.findOne(id);
+    }
+    /*this route removes the game from the session and deletes the game
+    * from the database, this route should be run after the game is finished
+    * also it returns the user that had the highest score*/
+    @RequestMapping(path = "/game/{id}", method = RequestMethod.DELETE)
+    public User deleteGame(@PathVariable("id") int id, HttpSession session) {
+        Game game = games.findOne(id);
+        session.removeAttribute("gameId");
+        games.delete(id);
+        return null;
+    }
     //route to grab list of all games
+    @RequestMapping(path = "/game", method = RequestMethod.GET)
+    public List<Game> getGames(HttpSession session) {
+        return null;
+    }
 }

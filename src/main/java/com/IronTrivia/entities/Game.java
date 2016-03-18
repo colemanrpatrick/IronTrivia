@@ -11,9 +11,9 @@ import java.util.ArrayList;
 public class Game {
     @Id
     @GeneratedValue
-    int id;
+    private int id;
     @Transient
-    ArrayList<User> players;
+    private ArrayList<User> players;
 
     public Game() {
     }

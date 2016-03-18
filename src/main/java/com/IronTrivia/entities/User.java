@@ -11,11 +11,11 @@ import javax.validation.constraints.NotNull;
 public class User {
     @Id
     @GeneratedValue
-    int id;
+    private int id;
     @NotNull
-    String userName;
+    private String userName;
     @NotNull
-    String passwordHash;
+    private String passwordHash;
 
     public int getId() {
         return id;

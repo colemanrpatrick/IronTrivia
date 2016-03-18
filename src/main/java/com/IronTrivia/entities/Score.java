@@ -11,13 +11,13 @@ import javax.validation.constraints.NotNull;
 public class Score {
     @Id
     @GeneratedValue
-    int id;
+    private int id;
     @NotNull
-    int score = 0;
+    private int score = 0;
     @ManyToOne
-    User user;
+    private User user;
     @ManyToOne
-    Game game;
+    private Game game;
 
     public Score() {
     }
