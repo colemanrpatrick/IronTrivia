@@ -168,8 +168,8 @@ public class IronTriviaController {
         Game game = games.findOne((Integer) session.getAttribute("gameId"));
         return scores.findByGame(game);
     }
-    /*may not need this route as the one above will give the client
-    * the users score as well, but here it is*/
+    /*may not need this route as the /score get route will give the client
+    * all of the users' score as well, but here it is*/
     @RequestMapping(path = "/score/{id}", method = RequestMethod.GET)
     public Score getScore(HttpSession session) {
         Game game = games.findOne((Integer) session.getAttribute("gameId"));
