@@ -32,7 +32,7 @@ module.exports = Backbone.View.extend({
       hasAnswered: null,
     });
     this.$el.find('input').val('');
-    console.log(this.model.toJSON());
+    this.model.buildURL();
     this.model.save();
   },
   addUser: function(event){
