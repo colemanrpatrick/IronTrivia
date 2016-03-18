@@ -62,6 +62,7 @@ public class IronTriviaController {
         return loginUser;//just returning the entire user object might change this later, might only need to send up the userName
                             //if return type is just username string when yall want the user's info you could just hit the /user/{userName} get route
     }
+    //
     //sorry for long comments, being verbose to help in dev
     //login or create new user; i'll try to explain what's going on in methods so you js guys can follow along a little easier
     @RequestMapping(path = "/user", method = RequestMethod.POST)
@@ -70,18 +71,20 @@ public class IronTriviaController {
         if (users.findByUserName(user.getUserName()) != null) {//checks if userName exists in the database, enforcing unique usernames with the logic
             throw new Exception("user already exists");
         }
+        user = new User(user.getUserName(), PasswordStorage.createHash(user.getPasswordHash()));
         users.save(user);
         return "success";
     }
+    //
     //put route to update user info, just send
-    @RequestMapping(path = "/user", method = RequestMethod.PUT)
+    @RequestMapping(path = "/user/{id}", method = RequestMethod.PUT)
     public User editUser(@RequestBody User user) {
         return users.save(user);//sends back the user with updated info
     }
-
+    //
     /*to grab a specific user, just in case yall want it; i could just grab info from the session, leaving it this way
     for now incase yall want to be able to grab some of any users info, if i do it that way this will take no params*/
-    @RequestMapping(path = "/user/{userName}", method = RequestMethod.GET)
+    @RequestMapping(path = "/user/{id}", method = RequestMethod.GET)
     public User getUser(@PathVariable("userName") String userName) {
         return users.findByUserName(userName);
     }
@@ -129,14 +132,14 @@ public class IronTriviaController {
     * and it will also delete the scores associated with that game
     * also it returns the user that had the highest score*/
     @RequestMapping(path = "/game/{id}", method = RequestMethod.DELETE)
-    public User deleteGame(@PathVariable("id") int id, HttpSession session) {
+    public Score deleteGame(@PathVariable("id") int id, HttpSession session) {
         Game game = games.findOne(id);
-        User winner = scores.findFirstByGameOrderByScoreDesc(game).getUser();//grabs the user with the highest score
+        Score winningScore = scores.findFirstByGameOrderByScoreDesc(game);//grabs the user with the highest score
         session.removeAttribute("gameId");
         //had to store the winner since i cant grab it after the game is deleted
         scores.deleteByGame(game);//want to change the game deletion to cascade and delete the scores associated wiht it, to get rid of this line
         games.delete(id);
-        return winner;
+        return winningScore;
     }
     //route to grab list of all games
     @RequestMapping(path = "/game", method = RequestMethod.GET)
@@ -150,7 +153,7 @@ public class IronTriviaController {
     }
     /*when the scores are created in the create game method, the score is instantiated at 0
     * this route increments the score by 5 if the user answered correctly*/
-    @RequestMapping(path = "/score", method = RequestMethod.PUT)
+    @RequestMapping(path = "/score/{id}", method = RequestMethod.PUT)
     public Score updateScore(@PathVariable("isCorrect") Boolean isCorrect, @PathVariable("pointValue") int pointValue, HttpSession session) {
         Game game = games.findOne((Integer) session.getAttribute("gameId"));
         User user = users.findByUserName((String) session.getAttribute("userName"));
