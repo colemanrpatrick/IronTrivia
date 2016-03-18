@@ -6,12 +6,22 @@ module.exports = {
   ].join(''),
   loginForm: [
     '<div class="col-sm-6 col-sm-offset-3">',
-      '<form>',
+      '<form class="login">',
         '<input name="username" type="text" placeholder="User Name">',
         '<input name="password" type="password" placeholder="Password">',
         '<button name="login">Login</button>',
-        '<button name="newUser">New User</button>',
       '</form>',
     '</div>'
   ].join(''),
+  addForm: [
+    '<div class="col-sm-6 col-sm-offset-3">',
+      '<button name="newUser">New User</button>',
+      '<form class="addUser hide">',
+        '<input name="username" type="text" placeholder="User Name">',
+        '<input name="password" type="password" placeholder="Password">',
+        '<input name="passwordConfirm" type="password" placeholder="Confirm Password">',
+        '<button name="addUser">Add User</button>',
+      '</form>',
+    '</div>'
+  ].join('')
 }
