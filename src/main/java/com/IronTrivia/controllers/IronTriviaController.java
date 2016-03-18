@@ -67,7 +67,8 @@ public class IronTriviaController {
             if (users.findByUserName(user.getUserName()) != null) {//checks if userName exists in the database, enforcing unique usernames with the logic
                 throw new Exception("user already exists");
             }
-            return users.save(user);//this method's return type is User so i have to return the new user. might be nice so you can say welcome new user dude
+            users.save(user);
+            return null;//when this route returns null you can use that to to send them back to the login page to login in with their new authentifications
         }
     }
     //put route to update user info, just send
