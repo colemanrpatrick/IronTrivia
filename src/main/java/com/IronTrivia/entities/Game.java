@@ -1,7 +1,10 @@
 package com.IronTrivia.entities;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by alexanderhughes on 3/17/16.

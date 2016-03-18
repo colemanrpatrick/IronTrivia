@@ -5,6 +5,7 @@ import com.IronTrivia.entities.Score;
 import com.IronTrivia.entities.User;
 
 import com.IronTrivia.services.GameRepository;
+import com.IronTrivia.services.ScoreRepository;
 import com.IronTrivia.services.UserRepository;
 import com.IronTrivia.utils.PasswordStorage;
 import org.h2.tools.Server;
@@ -15,6 +16,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -87,30 +89,101 @@ public class IronTriviaController {
         game = games.save(game);
         for (User player : players) {
             User user = users.findByUserName(player.getUserName());//grabbing the player from database
-            scores.save(new Score(user, game));//then creating a score for that user connected to that game
+            scores.save(new Score(user, game));//then creating a score for that user connected to that game, this is also the user's link to the game
         }
     }
     /*asks for game id creates session for this game for user
     * since this method returns the game that a session is created for
-    * we probably wont need a separate get method for a single game*/
+    * we probably wont need a separate get method for a single game,
+    * this will return the game whenever everyone has answered and or said they
+    * are ready, did this in post route since we are posting data to the server*/
     @RequestMapping(path = "/game/{id}", method = RequestMethod.POST)
-    public Game joinGame(@PathVariable("id") int id, HttpSession session) {
-        session.setAttribute("gameId", id);//one liner :)
-        return games.findOne(id);
+    public Game viewGame(@PathVariable("id") int id, HttpSession session, @PathVariable("isReady") Boolean isReady, @PathVariable("hasAnswered") Boolean hasAnswered) throws Exception {
+        Game game = games.findOne(id);
+        User user = users.findByUserName((String) session.getAttribute("userName"));
+        if (isReady != null) {
+            user.setReady(isReady);
+            users.save(user);
+            //one liner :)
+            for (User player : getPlayers(game)) {
+                if (!player.isReady()) {
+                    return null;//i think it will be very nice to have the game returned in this route, so a null return will be our indication of someone not yet being ready
+                }
+            }
+        }
+        else if (hasAnswered != null) {
+            user.setHasAnswered(hasAnswered);
+            users.save(user);
+            //one liner :)
+            for (User player : getPlayers(game)) {
+                if (!player.isHasAnswered()) {
+                    return null;//i think it will be very nice to have the game returned in this route, so a null return will be our indication of someone not yet being ready
+                }
+            }
+        }
+        session.setAttribute("gameId", id);
+        return game;//if a game object is returned then everyone is ready/has answered
     }
     /*this route removes the game from the session and deletes the game
     * from the database, this route should be run after the game is finished
+    * and it will also delete the scores associated with that game
     * also it returns the user that had the highest score*/
     @RequestMapping(path = "/game/{id}", method = RequestMethod.DELETE)
     public User deleteGame(@PathVariable("id") int id, HttpSession session) {
         Game game = games.findOne(id);
+        User winner = scores.findFirstByGameOrderByScoreDesc(game).getUser();//grabs the user with the highest score
         session.removeAttribute("gameId");
+        //had to store the winner since i cant grab it after the game is deleted
+        scores.deleteByGame(game);//want to change the game deletion to cascade and delete the scores associated wiht it, to get rid of this line
         games.delete(id);
-        return null;
+        return winner;
     }
     //route to grab list of all games
     @RequestMapping(path = "/game", method = RequestMethod.GET)
     public List<Game> getGames(HttpSession session) {
-        return null;
+        return (List<Game>) games.findAll();
+    }
+    //may not need this, as the code sets the gameId attribute value every time the route to join a game is hit
+    @RequestMapping(path = "/exit-game", method = RequestMethod.POST)
+    public void exitGame(HttpSession session) {
+        session.removeAttribute("gameId");
+    }
+    /*when the scores are created in the create game method, the score is instantiated at 0
+    * this route increments the score by 5 if the user answered correctly*/
+    @RequestMapping(path = "/score", method = RequestMethod.PUT)
+    public Score updateScore(@PathVariable("isCorrect") Boolean isCorrect, HttpSession session) {
+        Game game = games.findOne((Integer) session.getAttribute("gameId"));
+        User user = users.findByUserName((String) session.getAttribute("userName"));
+        Score score = scores.findByUserAndGame(user, game);
+        if (isCorrect) {
+            score.addToScore();//adds 5 to the user's score for this game if they had the correct answer
+        }
+        return score;
+    }
+    /*returns all the scores for a game, could use to display the scores for a game
+    *the score objects have a user object in them, so we don't need to request
+    *for the list of users separately, they will be included here*/
+    @RequestMapping(path = "/score", method = RequestMethod.GET)
+    public List<Score> getScores(HttpSession session) {
+        Game game = games.findOne((Integer) session.getAttribute("gameId"));
+        return scores.findByGame(game);
+    }
+    /*may not need this route as the one above will give the client
+    * the users score as well, but here it is*/
+    @RequestMapping(path = "/score/{id}", method = RequestMethod.GET)
+    public Score getScore(HttpSession session) {
+        Game game = games.findOne((Integer) session.getAttribute("gameId"));
+        User user = users.findByUserName((String) session.getAttribute("userName"));
+        Score score = scores.findByUserAndGame(user, game);
+        return score;
+    }
+
+    //a method to return the players in the game specified, to avoid some code duplication
+    public ArrayList<User> getPlayers(Game game) {
+        List<Score> gameScores = scores.findByGame(game);
+        for (Score score : gameScores) {
+            game.getPlayers().add(score.getUser());
+        }
+        return game.getPlayers();
     }
 }

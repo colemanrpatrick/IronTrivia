@@ -16,6 +16,8 @@ public class User {
     private String userName;
     @NotNull
     private String passwordHash;
+    private boolean isReady;
+    private boolean hasAnswered;
 
     public int getId() {
         return id;
@@ -35,5 +37,21 @@ public class User {
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public boolean isReady() {
+        return isReady;
+    }
+
+    public void setReady(boolean ready) {
+        isReady = ready;
+    }
+
+    public boolean isHasAnswered() {
+        return hasAnswered;
+    }
+
+    public void setHasAnswered(boolean hasAnswered) {
+        this.hasAnswered = hasAnswered;
     }
 }

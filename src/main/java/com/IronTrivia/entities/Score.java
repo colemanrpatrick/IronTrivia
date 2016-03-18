@@ -35,8 +35,8 @@ public class Score {
         return score;
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    public void addToScore() {
+        score += 5;
     }
 
     public User getUser() {
