@@ -2,10 +2,14 @@
 var Backbone = require('backbone');
 
 module.exports = Backbone.Model.extend({
-  urlRoot: '/user',
+  urlRoot: null,
   id: null,
   initialize: function(){
 
+  },
+  buildURL: function(){
+    url = '/user/' + this.toJSON().userName;
+    this.urlRoot = url;
   }
 });
 
@@ -44,7 +48,7 @@ module.exports = Backbone.View.extend({
       hasAnswered: null,
     });
     this.$el.find('input').val('');
-    console.log(this.model.toJSON());
+    this.model.buildURL();
     this.model.save();
   },
   addUser: function(event){
