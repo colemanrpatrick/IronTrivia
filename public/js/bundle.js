@@ -2,7 +2,7 @@
 var Backbone = require('backbone');
 
 module.exports = Backbone.Model.extend({
-  urlRoot: '/login',
+  urlRoot: '/user',
   id: null,
   initialize: function(){
 
@@ -39,10 +39,12 @@ module.exports = Backbone.View.extend({
     this.model.set({
       id: null,
       userName: this.$el.find('input[name="username"]').val(),
-      password: this.$el.find('input[name="password"]').val()
+      passwordHash: this.$el.find('input[name="password"]').val(),
+      isReady: null,
+      hasAnswered: null,
     });
     this.$el.find('input').val('');
-    console.log(this.model);
+    console.log(this.model.toJSON());
     this.model.save();
   },
   addUser: function(event){
