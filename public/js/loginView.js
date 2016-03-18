@@ -32,7 +32,9 @@ module.exports = Backbone.View.extend({
     });
     this.$el.find('input').val('');
     this.model.buildURL();
-    this.model.save();
+    this.model.save().then((function(data){
+        console.log(data);
+    }).bind(this));
   },
 
 });
