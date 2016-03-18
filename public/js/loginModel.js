@@ -1,9 +1,13 @@
 var Backbone = require('backbone');
 
 module.exports = Backbone.Model.extend({
-  urlRoot: '/user',
+  urlRoot: null,
   id: null,
   initialize: function(){
-    console.log("from login model")
+
+  },
+  buildURL: function(){
+    url = '/user/' + this.toJSON().userName;
+    this.urlRoot = url;
   }
 });
