@@ -13,6 +13,7 @@ module.exports = Backbone.Router.extend({
   routes:{
     "":"home",
     "home":"home",
+    "dashboard": "dashboard",
     "game": "game"
   },
   home:function(){
@@ -25,6 +26,9 @@ module.exports = Backbone.Router.extend({
     QModel.fetch().then((function(data){
       this.renderSubview(new QuestionView({model: QModel}));
     }).bind(this));
+  },
+  dashboard: function(){
+    
   },
   renderSubview: function (subview) {
     this.subview && this.subview.remove();
