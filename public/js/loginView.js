@@ -20,7 +20,6 @@ module.exports = Backbone.View.extend({
   },
   events:{
     'click button[name="login"]': 'login',
-    'click button[name="addUser"]': 'addUser'
   },
   login: function(event){
     event.preventDefault();
@@ -35,8 +34,5 @@ module.exports = Backbone.View.extend({
     this.model.buildURL();
     this.model.save();
   },
-  addUser: function(event){
-    event.preventDefault();
 
-  },
 });
