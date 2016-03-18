@@ -25,6 +25,7 @@ module.exports = Backbone.View.extend({
   login: function(event){
     event.preventDefault();
     this.model.set({
+      id: null,
       userName: this.$el.find('input[name="username"]').val(),
       password: this.$el.find('input[name="password"]').val()
     });
