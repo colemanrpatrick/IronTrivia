@@ -1,8 +1,9 @@
 var Backbone = require('backbone');
 
 module.exports = Backbone.Model.extend({
-  urlRoot: // fill in '/url'
+  urlRoot: '/user',
   initialize: function(){
     console.log("from user model")
-  }
+  },
+
 });
