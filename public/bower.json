@@ -1,0 +1,18 @@
+{
+  "name": "irontrivia",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "bhare1987 <brandonlhare@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/bhare1987/IronTrivia",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
