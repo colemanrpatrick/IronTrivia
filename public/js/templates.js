@@ -14,4 +14,10 @@ module.exports = {
       '</form>',
     '</div>'
   ].join(''),
-}
+  userTemp:[
+    "<div>",
+    "<%= username =%>",
+    "<%= score =%>",
+    "</div>"
+  ].join('')
+};
