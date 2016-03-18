@@ -1,0 +1,34 @@
+{
+  "name": "irontrivia",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "bundle": "node_modules/.bin/browserify main.js -o bundle.js",
+    "watch": "node_modules/.bin/node-sass css/styles.scss css/styles.css -w & node_modules/.bin/watchify js/main.js -o js/bundle.js",
+    "serve": "",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bhare1987/IronTrivia.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bhare1987/IronTrivia/issues"
+  },
+  "homepage": "https://github.com/bhare1987/IronTrivia#readme",
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "node-sass": "^3.4.2",
+    "watchify": "^3.7.0"
+  },
+  "dependencies": {
+    "backbone": "^1.3.2",
+    "bootstrap": "^3.3.6",
+    "jquery": "^2.2.2",
+    "moment": "^2.12.0",
+    "underscore": "^1.8.3"
+  }
+}
