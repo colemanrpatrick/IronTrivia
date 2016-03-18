@@ -1,19 +1,17 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 var tmpl= require('./templates');
+var LoginModel = require('./loginModel');
+var $ = require('jquery');
 // fill in - require for model
 
 module.exports = Backbone.View.extend({
-  collection:null,
-  el: // fill in - class, id, or whater ,
-  template: _.template(tmpl.newBitterForm),
+  collection: null,
+  el: '.loginForm',
+  template: _.template(tmpl.loginForm),
   initialize: function(){
-    if(!this.model){
-      // fill in - this.model = new Model({});
-    };
-    this.listenTo(this.model, 'change', this.addAll);
-    this.listenTo(this.model, 'update', this.addAll);
-    this.render();
+    this.$el.append(this.render().el);
+    this.model = new LoginModel({});
   },
   render: function(){
     var markup = this.template();
@@ -21,6 +19,20 @@ module.exports = Backbone.View.extend({
     return this;
   },
   events:{
-    // fill in - 'listener, delegation' : 'function'
-  }
+    'click button[name="login"]': 'login',
+    'click button[name="addUser"]': 'addUser'
+  },
+  login: function(event){
+    event.preventDefault();
+    this.model.set({
+      username: this.$el.find('input[name="username"]').val(),
+      password: this.$el.find('input[name="password"]').val()
+    });
+    this.$el.find('input').val('');
+    this.model.save();
+  },
+  addUser: function(event){
+    event.preventDefault();
+
+  },
 });

@@ -3,6 +3,8 @@ var UserCollection = require('./userCollection');
 var UserCollectionView = require('./userCollectionView');
 var QuestionModel = require('./questionModel');
 var QuestionView = require('./questionView');
+var LoginModel = require('./loginModel');
+var LoginView = require('./loginView');
 
 module.exports = Backbone.Router.extend({
   subview:null,
@@ -12,7 +14,9 @@ module.exports = Backbone.Router.extend({
     "game": "game"
   },
   home:function(){
-
+    var LogModel = new LoginModel();
+    var LogView = new LoginView({model: LogModel});
+    this.renderSubview(LogView);
   },
   game: function(){
     var QModel = new QuestionModel();
