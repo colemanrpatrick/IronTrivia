@@ -62,6 +62,7 @@ var _ = require('underscore');
 var tmpl= require('./templates');
 var $ = require('jquery');
 var GameModel = require('./gameModel');
+var UserModel = require('./userModel');
 
 module.exports = Backbone.View.extend({
   activeUser: null,
@@ -86,15 +87,23 @@ module.exports = Backbone.View.extend({
     this.$el.find('.new-game-form').toggleClass('hide');
   },
   buildGameModel: function(){
-    this.model.set({
-      id: null,
-      playerNames: [this.activeUser.toJSON().userName,
-        this.$el.find('input[name="player-1"]').val(),
-        this.$el.find('input[name="player-2"]').val(),
-        this.$el.find('input[name="player-3"]').val(),
-      ],
-      scoreList: null
-    });
+    var that = this;
+    var player1 = this.$el.find('input[name="player-1"]').val();
+    var player2 = this.$el.find('input[name="player-2"]').val();
+    var player3 = this.$el.find('input[name="player-3"]').val();
+    this.activeUser = new UserModel();
+    this.activeUser.setURL(sessionStorage.getItem('userID'));
+    this.activeUser.fetch().then(function(data){
+      that.model.set({
+        id: null,
+        playerNames: [data.userName,
+          player1,
+          player2,
+          player3,
+        ],
+        scoreList: null
+      });
+    })
   },
   createGame: function(event){
     event.preventDefault();
@@ -111,16 +120,17 @@ module.exports = Backbone.View.extend({
 
 });
 
-},{"./gameModel":5,"./templates":13,"backbone":17,"jquery":18,"underscore":19}],4:[function(require,module,exports){
+},{"./gameModel":5,"./templates":13,"./userModel":16,"backbone":17,"jquery":18,"underscore":19}],4:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var tmpl= require('./templates');
 var $ = require('jquery');
 var DashboardAddGameView = require('./dashAddGameView');
 var DashboardAddGameFormModel = require('./dashAddGameFormModel');
-
+var UserModel = require('./userModel');
 
 module.exports = Backbone.View.extend({
+  activeUser: null,
   collection: null,
   el: '.dashboard',
   template: _.template(tmpl.dashView),
@@ -136,7 +146,7 @@ module.exports = Backbone.View.extend({
 
 });
 
-},{"./dashAddGameFormModel":2,"./dashAddGameView":3,"./templates":13,"backbone":17,"jquery":18,"underscore":19}],5:[function(require,module,exports){
+},{"./dashAddGameFormModel":2,"./dashAddGameView":3,"./templates":13,"./userModel":16,"backbone":17,"jquery":18,"underscore":19}],5:[function(require,module,exports){
 var Backbone = require('backbone');
 
 module.exports = Backbone.Model.extend({
@@ -315,11 +325,7 @@ module.exports = Backbone.Router.extend({
     }).bind(this));
   },
   dashboard: function(){
-    var user = new UserModel({});
-    user.setURL(sessionStorage.getItem('userID'));
-    user.fetch();
-    console.log(user);
-    var DashView = new DashboardView({activeUser: user});
+    var DashView = new DashboardView();
     this.renderSubview(DashView);
   },
   renderSubview: function (subview) {
