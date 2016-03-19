@@ -17,6 +17,7 @@ import javax.annotation.PreDestroy;
 import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -35,8 +36,12 @@ public class IronTriviaController {
     Server dbui = null;
 
     @PostConstruct
-    public void init() throws SQLException {
+    public void init() throws SQLException, PasswordStorage.CannotPerformOperationException {
         dbui = Server.createWebServer().start();
+        users.save(new User("a", PasswordStorage.createHash("a")));
+        users.save(new User("b", PasswordStorage.createHash("b")));
+        users.save(new User("c", PasswordStorage.createHash("c")));
+        users.save(new User("d", PasswordStorage.createHash("d")));
     }
 
     @PreDestroy
@@ -89,23 +94,26 @@ public class IronTriviaController {
     /*to grab a specific user, just in case yall want it; i could just grab info from the session, leaving it this way
     for now incase yall want to be able to grab some of any users info, if i do it that way this will take no params*/
     @RequestMapping(path = "/user/{id}", method = RequestMethod.GET)
-    public User getUser(@PathVariable("userName") String userName) {
-        return users.findByUserName(userName);
+    public User getUser(@PathVariable("id") int id) {
+        return users.findOne(id);
     }
-
+    //
     //start of game routes
     //this route is void, no return type, just let me know if yall want something returned
+    //creates a game in the database
     @RequestMapping(path = "/game", method = RequestMethod.POST)
-    public void createGame(@RequestBody Game game) {
+    public Game createGame(@RequestBody Game game) {
         game = games.save(game);
-        for (String player : game.getPlayers()) {
+        List<String> playerNames = game.getPlayerNames();
+        for (String player : playerNames) {
             User user = users.findByUserName(player);//grabbing the player from database
             scores.save(new Score(user, game));//then creating a score for that user connected to that game, this is also the user's link to the game
         }
+        return game;
     }
-
+    //
     /*asks for game id creates session for this game for user
-    * since this method returns the game that a session is created for
+    * since this method returns the game a session is created for
     * we probably wont need a separate get method for a single game,
     * this will return the game whenever everyone has answered and or said they
     * are ready, did this in post route since we are posting data to the server*/
@@ -113,80 +121,85 @@ public class IronTriviaController {
     public Game viewGame(HttpSession session) {
         Game game = games.findOne((Integer) session.getAttribute("gameId"));
         User user = users.findByUserName((String) session.getAttribute("userName"));
-        game.setPlayers(getPlayers(game));
-        for (String player : game.getPlayers()) {
+        game.setPlayerNames(getPlayers(game));
+        for (String player : game.getPlayerNames()) {
             if (!users.findByUserName(player).getHasAnswered()) {
                 return null;//i think it will be very nice to have the game returned in this route, so a null return will be our indication of someone not yet being ready
             }
         }
         return game;
     }
-
+    //
+    //this is to join the game checks if everyone else has joined
     @RequestMapping(path = "/game/{id}", method = RequestMethod.POST)
     public Game joinGame(@PathVariable("id") int id, HttpSession session) throws Exception {
         Game game = games.findOne(id);
         User user = users.findByUserName((String) session.getAttribute("userName"));
-        for (String player : getPlayers(game)) {
+        game.setPlayerNames(getPlayers(game));
+        for (String player : game.getPlayerNames()) {
             if (!users.findByUserName(player).getReady()) {
                 return null;//i think it will be very nice to have the game returned in this route, so a null return will be our indication of someone not yet being ready
             }
         }
-        session.setAttribute("gameId", id);
-
-//        if (hasAnswered != null) {
-//            user.setHasAnswered(hasAnswered);
-//            users.save(user);
-//            //one liner :)
-//            for (User player : getPlayers(game)) {
-//                if (!player.isHasAnswered()) {
-//                    return null;//i think it will be very nice to have the game returned in this route, so a null return will be our indication of someone not yet being ready
-//                }
-//            }
-//        }
         return game;//if a game object is returned then everyone is ready/has answered
     }
-
+    //
     /*this route removes the game from the session and deletes the game
     * from the database, this route should be run after the game is finished
     * and it will also delete the scores associated with that game
     * also it returns the user that had the highest score*/
     @RequestMapping(path = "/game/{id}", method = RequestMethod.DELETE)
     public Score deleteGame(@PathVariable("id") int id, HttpSession session) {
+        User user =  users.findByUserName((String) session.getAttribute("userName"));
         Game game = games.findOne(id);
         Score winningScore = scores.findFirstByGameOrderByScoreDesc(game);//grabs the user with the highest score
         session.removeAttribute("gameId");
         //had to store the winner since i cant grab it after the game is deleted
         scores.deleteByGame(game);//want to change the game deletion to cascade and delete the scores associated wiht it, to get rid of this line
         games.delete(id);
+        user.setHasAnswered(false);
+        user.setReady(false);
+        users.save(user);
         return winningScore;
     }
-
+    //
     //route to grab list of all games
     @RequestMapping(path = "/game", method = RequestMethod.GET)
     public List<Game> getGames(HttpSession session) {
         return (List<Game>) games.findAll();
     }
-
+    //
     //may not need this, as the code sets the gameId attribute value every time the route to join a game is hit
     @RequestMapping(path = "/exit-game", method = RequestMethod.POST)
     public void exitGame(HttpSession session) {
         session.removeAttribute("gameId");
+        User user = users.findByUserName((String) session.getAttribute("userName"));
+        user.setHasAnswered(false);
+        user.setReady(false);
+        users.save(user);
     }
-
+    //
+    @RequestMapping(path = "/logout", method = RequestMethod.POST)
+    public void logout(HttpSession session) {
+        session.invalidate();
+    }
+    //
     /*when the scores are created in the create game method, the score is instantiated at 0
     * this route increments the score by 5 if the user answered correctly*/
-    @RequestMapping(path = "/score/{id}", method = RequestMethod.PUT)
-    public Score updateScore(@PathVariable("isCorrect") Boolean isCorrect, @PathVariable("pointValue") int pointValue, HttpSession session) {
+    @RequestMapping(path = "/score", method = RequestMethod.PUT)
+    public Score updateScore(@RequestBody HashMap map, HttpSession session) {
         Game game = games.findOne((Integer) session.getAttribute("gameId"));
         User user = users.findByUserName((String) session.getAttribute("userName"));
         Score score = scores.findByUserAndGame(user, game);
-        if (isCorrect) {
-            score.addToScore(pointValue);//adds 5 to the user's score for this game if they had the correct answer
+        if ((Boolean)map.get("isCorrect")) {
+            score.addToScore((Integer)map.get("pointValue"));//adds 5 to the user's score for this game if they had the correct answer
         }
+        user.setHasAnswered(false);
+        users.save(user);
         scores.save(score);
         return score;
     }
-
+    //
     /*returns all the scores for a game, could use to display the scores for a game
     *the score objects have a user object in them, so we don't need to request
     *for the list of users separately, they will be included here*/
@@ -195,7 +208,7 @@ public class IronTriviaController {
         Game game = games.findOne((Integer) session.getAttribute("gameId"));
         return scores.findByGame(game);
     }
-
+    //
     /*may not need this route as the /score get route will give the client
     * all of the users' score as well, but here it is*/
     @RequestMapping(path = "/score/{id}", method = RequestMethod.GET)
@@ -205,13 +218,13 @@ public class IronTriviaController {
         Score score = scores.findByUserAndGame(user, game);
         return score;
     }
-
+    //
     //a method to return the players in the game specified, to avoid some code duplication
-    public ArrayList<String> getPlayers(Game game) {
+    public List<String> getPlayers(Game game) {
         List<Score> gameScores = scores.findByGame(game);
         for (Score score : gameScores) {
-            game.getPlayers().add(score.getUser().getUserName());
+            game.getPlayerNames().add(score.getUser().getUserName());
         }
-        return game.getPlayers();
+        return game.getPlayerNames();
     }
 }
