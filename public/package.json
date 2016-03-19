@@ -6,7 +6,7 @@
   "scripts": {
     "bundle": "node_modules/.bin/browserify main.js -o bundle.js",
     "watch": "node_modules/.bin/node-sass css/styles.scss css/styles.css -w & node_modules/.bin/watchify js/main.js -o js/bundle.js",
-    "serve": "",
+    "serve": "cd .. && java -jar IronTrivia-0.0.1-SNAPSHOT.jar",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
