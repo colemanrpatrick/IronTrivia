@@ -28,7 +28,7 @@ module.exports = Backbone.Router.extend({
     }).bind(this));
   },
   dashboard: function(){
-    console.log("this works"!);
+    console.log("this works");
   },
   renderSubview: function (subview) {
     this.subview && this.subview.remove();
