@@ -1,3 +1,5 @@
-* {
-  box-sizing: border-box;
-}
+@import "_core.scss";
+@import "_dashboard.scss";
+@import "_gameboard.scss";
+@import "_login.scss";
+@import "_newUser.scss";

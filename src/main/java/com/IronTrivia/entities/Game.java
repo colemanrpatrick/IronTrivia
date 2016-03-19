@@ -1,7 +1,5 @@
 package com.IronTrivia.entities;
 
-import org.hibernate.annotations.Cascade;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +14,9 @@ public class Game {
     @GeneratedValue
     private int id;
     @Transient
-    private ArrayList<User> players;
+    private ArrayList<String> playerNames;
+    @OneToMany(mappedBy = "score")
+    List<Score> scoreList;
 
     public Game() {
     }
@@ -26,11 +26,27 @@ public class Game {
 
     }
 
-    public ArrayList<User> getPlayers() {
-        return players;
+    public ArrayList<String> getPlayerNames() {
+        return playerNames;
     }
 
-    public void setPlayers(ArrayList<User> players) {
-        this.players = players;
+    public void setPlayerNames(ArrayList<String> playerNames) {
+        this.playerNames = playerNames;
+    }
+
+    public List<Score> getScoreList() {
+        return scoreList;
+    }
+
+    public void setScoreList(List<Score> scoreList) {
+        this.scoreList = scoreList;
+    }
+
+    public ArrayList<String> getPlayers() {
+        return playerNames;
+    }
+
+    public void setPlayers(ArrayList<String> playerNames) {
+        this.playerNames = playerNames;
     }
 }

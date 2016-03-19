@@ -16,8 +16,18 @@ public class User {
     private String userName;
     @NotNull
     private String passwordHash;
-    private boolean isReady;
-    private boolean hasAnswered;
+    @Column(nullable = true)
+    private Boolean isReady = false;
+    @Column(nullable = true)
+    private Boolean hasAnswered = false;
+
+    public User(String userName, String passwordHash) {
+        this.userName = userName;
+        this.passwordHash = passwordHash;
+    }
+
+    public User() {
+    }
 
     public int getId() {
         return id;
@@ -39,19 +49,19 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
-    public boolean isReady() {
+    public Boolean getReady() {
         return isReady;
     }
 
-    public void setReady(boolean ready) {
+    public void setReady(Boolean ready) {
         isReady = ready;
     }
 
-    public boolean isHasAnswered() {
+    public Boolean getHasAnswered() {
         return hasAnswered;
     }
 
-    public void setHasAnswered(boolean hasAnswered) {
+    public void setHasAnswered(Boolean hasAnswered) {
         this.hasAnswered = hasAnswered;
     }
 }
