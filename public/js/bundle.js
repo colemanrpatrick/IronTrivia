@@ -67,7 +67,7 @@ module.exports = Backbone.View.extend({
   activeUser: null,
   collection: null,
   el: '.add-game-container',
-  template: _.template(tmpl.createNewGame),
+  template: _.template(tmpl.newGameForm),
   initialize: function(){
     this.$el.append(this.render().el);
     this.model = new GameModel({});
@@ -79,6 +79,7 @@ module.exports = Backbone.View.extend({
   },
   events:{
     'click button[name="to-new-game-form"]': 'showForm',
+    'click button[name="submit-new-game"]': 'createGame'
   },
   showForm: function(event){
     event.preventDefault();
@@ -315,7 +316,8 @@ module.exports = Backbone.Router.extend({
   },
   dashboard: function(){
     var user = new UserModel({});
-    user.get({id: sessionStorage.getItem('userID')});
+    user.fetch({id: sessionStorage.getItem('userID')});
+    console.log(user);
     var DashView = new DashboardView({activeUser: user});
     this.renderSubview(DashView);
   },
@@ -368,12 +370,12 @@ module.exports = {
   ].join(''),
   newGameForm: [
     '<div class="col-sm-6 col-sm-offset-3">',
-      '<button name="to-new-game-form">',
+      '<button name="to-new-game-form">Create game</button>',
       '<form class="new-game-form hide">',
         '<input type="text" name="player-1" placeholder="player 1">',
         '<input type="text" name="player-2" placeholder="player 2">',
         '<input type="text" name="player-3" placeholder="player 3">',
-        '<button type="submit">create game</button>',
+        '<button name="submit-new-game" type="submit">Submit</button>',
       '</form>',
     '</div>'
   ].join('')
