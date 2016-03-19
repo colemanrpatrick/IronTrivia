@@ -66,6 +66,7 @@ var tmpl= require('./templates');
 var LoginModel = require('./loginModel');
 var $ = require('jquery');
 var Router = require('./router');
+var main = require('./main');
 // fill in - require for model
 
 module.exports = Backbone.View.extend({
@@ -105,7 +106,7 @@ module.exports = Backbone.View.extend({
 
 });
 
-},{"./loginModel":2,"./router":7,"./templates":8,"backbone":12,"jquery":13,"underscore":14}],4:[function(require,module,exports){
+},{"./loginModel":2,"./main":4,"./router":7,"./templates":8,"backbone":12,"jquery":13,"underscore":14}],4:[function(require,module,exports){
 var Backbone = require('backbone');
 var $ = require('jquery');
 var Router = require('./router');

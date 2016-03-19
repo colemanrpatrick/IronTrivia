@@ -4,6 +4,7 @@ var tmpl= require('./templates');
 var LoginModel = require('./loginModel');
 var $ = require('jquery');
 var Router = require('./router');
+var main = require('./main');
 // fill in - require for model
 
 module.exports = Backbone.View.extend({
