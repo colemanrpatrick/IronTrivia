@@ -29,19 +29,18 @@ module.exports = Backbone.View.extend({
   },
   buildGameModel: function(){
     var that = this;
-    var player1 = this.$el.find('input[name="player-1"]').val();
-    var player2 = this.$el.find('input[name="player-2"]').val();
-    var player3 = this.$el.find('input[name="player-3"]').val();
+    var player2 = this.$el.find('input[name="player-1"]').val();
+    var player3 = this.$el.find('input[name="player-2"]').val();
+    var player4 = this.$el.find('input[name="player-3"]').val();
     this.activeUser = new UserModel();
     this.activeUser.setURL(sessionStorage.getItem('userID'));
     this.activeUser.fetch().then(function(data){
       that.model.set({
         id: null,
-        playerNames: [data.userName,
-          player1,
-          player2,
-          player3,
-        ],
+        player1: data.userName,
+        player2: player2,
+        player3: player3,
+        player4: player4,
         scoreList: null
       });
     })
