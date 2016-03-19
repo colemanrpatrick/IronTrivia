@@ -15,7 +15,7 @@ public class Game {
     private int id;
     @Transient
     private List<String> playerNames;
-    @OneToMany(mappedBy = "score")
+    @OneToMany(mappedBy = "game")
     List<Score> scoreList;
 
     public Game() {

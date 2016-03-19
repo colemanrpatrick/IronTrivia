@@ -99,12 +99,12 @@ public class IronTriviaController {
     //creates a game in the database
     @RequestMapping(path = "/game", method = RequestMethod.POST)
     public void createGame(@RequestBody Game game) {
+        game = games.save(game);
         List<String> playerNames = game.getPlayerNames();
         for (String player : playerNames) {
             User user = users.findByUserName(player);//grabbing the player from database
             scores.save(new Score(user, game));//then creating a score for that user connected to that game, this is also the user's link to the game
         }
-        games.save(game);
     }
     //
     /*asks for game id creates session for this game for user
