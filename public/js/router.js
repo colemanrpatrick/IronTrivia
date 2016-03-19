@@ -8,6 +8,7 @@ var LoginView = require('./loginView');
 var UserModel = require('./userModel');
 var AddUserView = require('./addUserView');
 var LoginContainerView = require('./loginContainerView');
+var DashboardView = require('./dashboardView');
 
 module.exports = Backbone.Router.extend({
   subview:null,
@@ -32,6 +33,13 @@ module.exports = Backbone.Router.extend({
     console.log("this works!");
     this.renderSubview();
     console.log("this works!");
+
+    var user = new UserModel({});
+    user.fetch({id: sessionStorage.getItem('userID')});
+    console.log(user);
+    var DashView = new DashboardView({activeUser: user});
+    this.renderSubview(DashView);
+
   },
   renderSubview: function (subview) {
     this.subview && this.subview.remove();
