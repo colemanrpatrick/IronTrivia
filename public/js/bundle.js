@@ -39,12 +39,140 @@ module.exports = Backbone.View.extend({
       });
       this.$el.find('input').val('');
       this.model.save();
+      this.$el.find('.addUser').toggleClass('hide');
     }
   },
 
 });
 
-},{"./templates":8,"./userModel":11,"backbone":12,"jquery":13,"underscore":14}],2:[function(require,module,exports){
+},{"./templates":13,"./userModel":16,"backbone":17,"jquery":18,"underscore":19}],2:[function(require,module,exports){
+var Backbone = require('backbone');
+
+module.exports = Backbone.Model.extend({
+  urlRoot: '/game',
+  id: null,
+  initialize: function(){
+    console.log("Add Game Form Initialized");
+  }
+});
+
+},{"backbone":17}],3:[function(require,module,exports){
+var Backbone = require('backbone');
+var _ = require('underscore');
+var tmpl= require('./templates');
+var $ = require('jquery');
+var GameModel = require('./gameModel');
+
+module.exports = Backbone.View.extend({
+  activeUser: null,
+  collection: null,
+  el: '.add-game-container',
+  template: _.template(tmpl.newGameForm),
+  initialize: function(){
+    this.$el.append(this.render().el);
+    this.model = new GameModel({});
+  },
+  render: function(){
+    var markup = this.template();
+    this.$el.html(markup);
+    return this;
+  },
+  events:{
+    'click button[name="to-new-game-form"]': 'showForm',
+    'click button[name="submit-new-game"]': 'createGame'
+  },
+  showForm: function(event){
+    event.preventDefault();
+    this.$el.find('.new-game-form').toggleClass('hide');
+  },
+  buildGameModel: function(){
+    this.model.set({
+      id: null,
+      playerNames: [this.activeUser.toJSON().userName,
+        this.$el.find('input[name="player-1"]').val(),
+        this.$el.find('input[name="player-2"]').val(),
+        this.$el.find('input[name="player-3"]').val(),
+      ],
+      scoreList: null
+    });
+  },
+  createGame: function(event){
+    event.preventDefault();
+    this.buildGameModel();
+    this.$el.find('input').val('');
+    this.model.save({}, {
+      error: function(error){
+      console.log(error);
+    }, success: function(data){
+      console.log(data, "Game Created");
+      // Backbone.history.navigate("dashboard", {trigger: true, replace: true});
+    }});
+  },
+
+});
+
+},{"./gameModel":5,"./templates":13,"backbone":17,"jquery":18,"underscore":19}],4:[function(require,module,exports){
+var Backbone = require('backbone');
+var _ = require('underscore');
+var tmpl= require('./templates');
+var $ = require('jquery');
+var DashboardAddGameView = require('./dashAddGameView');
+var DashboardAddGameFormModel = require('./dashAddGameFormModel');
+
+
+module.exports = Backbone.View.extend({
+  collection: null,
+  el: '.dashboard',
+  template: _.template(tmpl.dashView),
+  initialize: function(){
+    this.$el.append(this.render().el);
+    var DashAddFormView = new DashboardAddGameView();
+  },
+  render: function(){
+    var markup = this.template();
+    this.$el.html(markup);
+    return this;
+  }
+
+});
+
+},{"./dashAddGameFormModel":2,"./dashAddGameView":3,"./templates":13,"backbone":17,"jquery":18,"underscore":19}],5:[function(require,module,exports){
+var Backbone = require('backbone');
+
+module.exports = Backbone.Model.extend({
+  urlRoot: '/game',
+  initialize: function(){
+    console.log("from game model")
+  }
+});
+
+},{"backbone":17}],6:[function(require,module,exports){
+var Backbone = require('backbone');
+var _ = require('underscore');
+var tmpl= require('./templates');
+var $ = require('jquery');
+var LoginModel = require('./loginModel');
+var LoginView = require('./loginView');
+var AddUserView = require('./addUserView');
+
+module.exports = Backbone.View.extend({
+  collection: null,
+  el: '.login',
+  template: _.template(tmpl.login),
+  initialize: function(){
+    this.$el.append(this.render().el);
+    var LogView = new LoginView();
+    var AddUsrView = new AddUserView();
+  },
+  render: function(){
+    var markup = this.template();
+    this.$el.html(markup);
+    return this;
+  }
+
+});
+
+},{"./addUserView":1,"./loginModel":7,"./loginView":8,"./templates":13,"backbone":17,"jquery":18,"underscore":19}],7:[function(require,module,exports){
 var Backbone = require('backbone');
 
 module.exports = Backbone.Model.extend({
@@ -59,14 +187,14 @@ module.exports = Backbone.Model.extend({
   }
 });
 
-},{"backbone":12}],3:[function(require,module,exports){
+},{"backbone":17}],8:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var tmpl= require('./templates');
 var LoginModel = require('./loginModel');
+var UserModel = require('./userModel');
 var $ = require('jquery');
 var Router = require('./router');
-// fill in - require for model
 
 module.exports = Backbone.View.extend({
   collection: null,
@@ -95,17 +223,18 @@ module.exports = Backbone.View.extend({
     });
     this.$el.find('input').val('');
     this.model.buildURL();
-    this.model.save({}, {error: function(error){
+    this.model.save({}, {
+      error: function(error){
       console.log(error);
     }, success: function(data){
-      console.log(data);
-      Router.navigate("dashboard", {trigger: true, replace: true});
+      sessionStorage.setItem('userID', data.toJSON().id);
+      Backbone.history.navigate("dashboard", {trigger: true, replace: true});
     }});
   },
 
 });
 
-},{"./loginModel":2,"./router":7,"./templates":8,"backbone":12,"jquery":13,"underscore":14}],4:[function(require,module,exports){
+},{"./loginModel":7,"./router":12,"./templates":13,"./userModel":16,"backbone":17,"jquery":18,"underscore":19}],9:[function(require,module,exports){
 var Backbone = require('backbone');
 var $ = require('jquery');
 var Router = require('./router');
@@ -115,7 +244,7 @@ $(document).ready(function () {
   Backbone.history.start({pushstate: true});
 });
 
-},{"./router":7,"backbone":12,"jquery":13}],5:[function(require,module,exports){
+},{"./router":12,"backbone":17,"jquery":18}],10:[function(require,module,exports){
 var Backbone = require('backbone');
 
 module.exports = Backbone.Model.extend({
@@ -125,7 +254,7 @@ module.exports = Backbone.Model.extend({
   }
 });
 
-},{"backbone":12}],6:[function(require,module,exports){
+},{"backbone":17}],11:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = require('jquery');
@@ -154,7 +283,7 @@ module.exports = Backbone.View.extend({
 
 });
 
-},{"./questionModel":5,"./templates":8,"backbone":12,"jquery":13,"underscore":14}],7:[function(require,module,exports){
+},{"./questionModel":10,"./templates":13,"backbone":17,"jquery":18,"underscore":19}],12:[function(require,module,exports){
 var Backbone = require('backbone');
 var UserCollection = require('./userCollection');
 var UserCollectionView = require('./userCollectionView');
@@ -164,6 +293,8 @@ var LoginModel = require('./loginModel');
 var LoginView = require('./loginView');
 var UserModel = require('./userModel');
 var AddUserView = require('./addUserView');
+var LoginContainerView = require('./loginContainerView');
+var DashboardView = require('./dashboardView');
 
 module.exports = Backbone.Router.extend({
   subview:null,
@@ -174,9 +305,8 @@ module.exports = Backbone.Router.extend({
     "game": "game"
   },
   home:function(){
-    var LogView = new LoginView();
-    var AddUsrView = new AddUserView();
-    this.renderSubview(LogView);
+    var LogContView = new LoginContainerView();
+    this.renderSubview(LogContView);
   },
   game: function(){
     var QModel = new QuestionModel();
@@ -185,7 +315,11 @@ module.exports = Backbone.Router.extend({
     }).bind(this));
   },
   dashboard: function(){
-    
+    var user = new UserModel({});
+    user.fetch({id: sessionStorage.getItem('userID')});
+    console.log(user);
+    var DashView = new DashboardView({activeUser: user});
+    this.renderSubview(DashView);
   },
   renderSubview: function (subview) {
     this.subview && this.subview.remove();
@@ -193,7 +327,7 @@ module.exports = Backbone.Router.extend({
   }
 });
 
-},{"./addUserView":1,"./loginModel":2,"./loginView":3,"./questionModel":5,"./questionView":6,"./userCollection":9,"./userCollectionView":10,"./userModel":11,"backbone":12}],8:[function(require,module,exports){
+},{"./addUserView":1,"./dashboardView":4,"./loginContainerView":6,"./loginModel":7,"./loginView":8,"./questionModel":10,"./questionView":11,"./userCollection":14,"./userCollectionView":15,"./userModel":16,"backbone":17}],13:[function(require,module,exports){
 module.exports = {
   question: [
       '<div class="col-sm-8">',
@@ -205,13 +339,19 @@ module.exports = {
       '<form class="login">',
         '<input name="username" type="text" placeholder="User Name">',
         '<input name="password" type="password" placeholder="Password">',
-        '<button name="login">Login</button>',
+        '<button class="login-button" name="login">Login</button>',
       '</form>',
     '</div>'
   ].join(''),
+  userTemp:[
+    "<div>",
+    "<%= username =%>",
+    "<%= score =%>",
+    "</div>"
+  ].join(''),
   addForm: [
     '<div class="col-sm-6 col-sm-offset-3">',
-      '<button name="newUser">New User</button>',
+      '<button name="newUser">create an account</button>',
       '<form class="addUser hide">',
         '<input name="username" type="text" placeholder="User Name">',
         '<input name="password" type="password" placeholder="Password">',
@@ -219,14 +359,33 @@ module.exports = {
         '<button name="addUser">Add User</button>',
       '</form>',
     '</div>'
+  ].join(''),
+  login: [
+    '<div class="loginForm row"></div>',
+    '<div class="addUserForm row"></div>'
+  ].join(''),
+  dashView: [
+    '<div class="join-game-container row"></div>',
+    '<div class="add-game-container row"></div>'
+  ].join(''),
+  newGameForm: [
+    '<div class="col-sm-6 col-sm-offset-3">',
+      '<button name="to-new-game-form">Create game</button>',
+      '<form class="new-game-form hide">',
+        '<input type="text" name="player-1" placeholder="player 1">',
+        '<input type="text" name="player-2" placeholder="player 2">',
+        '<input type="text" name="player-3" placeholder="player 3">',
+        '<button name="submit-new-game" type="submit">Submit</button>',
+      '</form>',
+    '</div>'
   ].join('')
-}
+};
 
-},{}],9:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 
-},{}],10:[function(require,module,exports){
-arguments[4][9][0].apply(exports,arguments)
-},{"dup":9}],11:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
+arguments[4][14][0].apply(exports,arguments)
+},{"dup":14}],16:[function(require,module,exports){
 var Backbone = require('backbone');
 
 module.exports = Backbone.Model.extend({
@@ -237,7 +396,7 @@ module.exports = Backbone.Model.extend({
 
 });
 
-},{"backbone":12}],12:[function(require,module,exports){
+},{"backbone":17}],17:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.3.2
 
@@ -2161,7 +2320,7 @@ module.exports = Backbone.Model.extend({
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":13,"underscore":14}],13:[function(require,module,exports){
+},{"jquery":18,"underscore":19}],18:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.2.2
  * http://jquery.com/
@@ -12005,7 +12164,7 @@ if ( !noGlobal ) {
 return jQuery;
 }));
 
-},{}],14:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -13555,4 +13714,4 @@ return jQuery;
   }
 }.call(this));
 
-},{}]},{},[4]);
+},{}]},{},[9]);

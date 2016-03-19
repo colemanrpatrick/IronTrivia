@@ -1,2 +1,43 @@
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box; }
+
+body {
+  background-color: #efefef; }
+
+button {
+  -webkit-appearance: none;
+  border: 1px solid #DCDCDC;
+  background: white;
+  padding: 5px 15px;
+  margin-top: 10px;
+  border-radius: 5px; }
+  button:focus {
+    outline: none; }
+  button:hover {
+    background: lightgray; }
+
+input {
+  margin: 1% 0;
+  padding: 10px; }
+  input:focus {
+    outline: none; }
+
+.login form {
+  margin: 3% 0; }
+
+.login input {
+  width: 49%; }
+  .login input:first-child {
+    margin-right: 5px; }
+
+.addUserForm {
+  margin: 5% 0; }
+  .addUserForm button:first-child {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0; }
+  .addUserForm input {
+    width: 100%; }

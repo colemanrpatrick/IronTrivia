@@ -1,23 +1,23 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 var tmpl= require('./templates');
-var GameModel = require('./gameModel');
 var $ = require('jquery');
+var DashboardAddGameView = require('./dashAddGameView');
+var DashboardAddGameFormModel = require('./dashAddGameFormModel');
+
 
 module.exports = Backbone.View.extend({
   collection: null,
-  el: // fill in class, id or tagName
-  template: // fill in _.template(),
+  el: '.dashboard',
+  template: _.template(tmpl.dashView),
   initialize: function(){
-    // this.$el.append(this.render().el);
-    this.model = new GameModel({});
+    this.$el.append(this.render().el);
+    var DashAddFormView = new DashboardAddGameView();
   },
   render: function(){
     var markup = this.template();
     this.$el.html(markup);
     return this;
-  },
-  events:{
-    // fill in 'listener delegator': 'function',
   }
+
 });

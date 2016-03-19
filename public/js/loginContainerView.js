@@ -1,23 +1,24 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 var tmpl= require('./templates');
-var GameModel = require('./gameModel');
 var $ = require('jquery');
+var LoginModel = require('./loginModel');
+var LoginView = require('./loginView');
+var AddUserView = require('./addUserView');
 
 module.exports = Backbone.View.extend({
   collection: null,
-  el: // fill in class, id or tagName
-  template: // fill in _.template(),
+  el: '.login',
+  template: _.template(tmpl.login),
   initialize: function(){
-    // this.$el.append(this.render().el);
-    this.model = new GameModel({});
+    this.$el.append(this.render().el);
+    var LogView = new LoginView();
+    var AddUsrView = new AddUserView();
   },
   render: function(){
     var markup = this.template();
     this.$el.html(markup);
     return this;
-  },
-  events:{
-    // fill in 'listener delegator': 'function',
   }
+
 });

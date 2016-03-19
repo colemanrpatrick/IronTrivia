@@ -1,8 +1,9 @@
 var Backbone = require('backbone');
 
 module.exports = Backbone.Model.extend({
-  urlRoot: '/game',
+  urlRoot: null,
+  id: null,
   initialize: function(){
-    console.log("from game model")
-  }
+
+  },
 });
