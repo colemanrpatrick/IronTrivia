@@ -30,7 +30,6 @@ module.exports = Backbone.Router.extend({
   dashboard: function(){
     this.renderSubview();
     console.log("this works!");
-
   },
   renderSubview: function (subview) {
     this.subview && this.subview.remove();
