@@ -33,7 +33,6 @@ module.exports = Backbone.Router.extend({
     user.get({id: sessionStorage.getItem('userID')});
     var DashView = new DashboardView({activeUser: user});
     this.renderSubview(DashView);
-
   },
   renderSubview: function (subview) {
     this.subview && this.subview.remove();

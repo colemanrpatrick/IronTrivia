@@ -318,7 +318,6 @@ module.exports = Backbone.Router.extend({
     user.get({id: sessionStorage.getItem('userID')});
     var DashView = new DashboardView({activeUser: user});
     this.renderSubview(DashView);
-
   },
   renderSubview: function (subview) {
     this.subview && this.subview.remove();
@@ -367,6 +366,17 @@ module.exports = {
     '<div class="join-game-container row"></div>',
     '<div class="add-game-container row"></div>'
   ].join(''),
+  newGameForm: [
+    '<div class="col-sm-6 col-sm-offset-3">',
+      '<button name="to-new-game-form">',
+      '<form class="new-game-form hide">',
+        '<input type="text" name="player-1" placeholder="player 1">',
+        '<input type="text" name="player-2" placeholder="player 2">',
+        '<input type="text" name="player-3" placeholder="player 3">',
+        '<button type="submit">create game</button>',
+      '</form>',
+    '</div>'
+  ].join('')
 };
 
 },{}],14:[function(require,module,exports){
