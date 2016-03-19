@@ -9,13 +9,13 @@ module.exports = {
       '<form class="login">',
         '<input name="username" type="text" placeholder="User Name">',
         '<input name="password" type="password" placeholder="Password">',
-        '<button name="login">Login</button>',
+        '<button class="login-button" name="login">Login</button>',
       '</form>',
     '</div>'
   ].join(''),
   addForm: [
     '<div class="col-sm-6 col-sm-offset-3">',
-      '<button name="newUser">New User</button>',
+      '<button name="newUser">create an account</button>',
       '<form class="addUser hide">',
         '<input name="username" type="text" placeholder="User Name">',
         '<input name="password" type="password" placeholder="Password">',

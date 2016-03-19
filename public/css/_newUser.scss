@@ -1,0 +1,12 @@
+
+.addUserForm {
+  margin: 5% 0;
+  button{
+    &:first-child{
+      background:none;
+      border:none;
+      padding:0;
+      margin:0;
+    }
+  }
+}
