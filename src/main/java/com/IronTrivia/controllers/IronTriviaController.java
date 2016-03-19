@@ -179,6 +179,11 @@ public class IronTriviaController {
         users.save(user);
     }
     //
+    @RequestMapping(path = "/logout", method = RequestMethod.POST)
+    public void logout(HttpSession session) {
+        session.invalidate();
+    }
+    //
     /*when the scores are created in the create game method, the score is instantiated at 0
     * this route increments the score by 5 if the user answered correctly*/
     @RequestMapping(path = "/score", method = RequestMethod.PUT)
