@@ -316,7 +316,8 @@ module.exports = Backbone.Router.extend({
   },
   dashboard: function(){
     var user = new UserModel({});
-    user.fetch({id: sessionStorage.getItem('userID')});
+    user.setURL(sessionStorage.getItem('userID'));
+    user.fetch();
     console.log(user);
     var DashView = new DashboardView({activeUser: user});
     this.renderSubview(DashView);
@@ -391,8 +392,15 @@ var Backbone = require('backbone');
 module.exports = Backbone.Model.extend({
   urlRoot: '/user',
   initialize: function(){
-    console.log("from user model")
+    
   },
+  setURL: function(id){
+    if(id){
+      this.urlRoot = this.urlRoot + '/' + id;
+    } else {
+      this.urlRoot = '/user';
+    }
+  }
 
 });
 

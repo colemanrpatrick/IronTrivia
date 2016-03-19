@@ -30,7 +30,8 @@ module.exports = Backbone.Router.extend({
   },
   dashboard: function(){
     var user = new UserModel({});
-    user.fetch({id: sessionStorage.getItem('userID')});
+    user.setURL(sessionStorage.getItem('userID'));
+    user.fetch();
     console.log(user);
     var DashView = new DashboardView({activeUser: user});
     this.renderSubview(DashView);
