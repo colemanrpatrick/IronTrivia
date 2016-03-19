@@ -237,6 +237,7 @@ module.exports = Backbone.View.extend({
     this.model.save({}, {
       error: function(error){
       console.log(error);
+      {""}
     }, success: function(data){
       sessionStorage.setItem('userID', data.toJSON().id);
       Backbone.history.navigate("dashboard", {trigger: true, replace: true});
@@ -402,8 +403,7 @@ module.exports = {
       '<% }) %>',
       '<button>join game</button>',
     '</article>'
-
-  ]
+  ].join('')
 };
 
 },{}],14:[function(require,module,exports){

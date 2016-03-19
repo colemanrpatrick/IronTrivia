@@ -64,6 +64,5 @@ module.exports = {
       '<% }) %>',
       '<button>join game</button>',
     '</article>'
-
-  ]
+  ].join('')
 };
