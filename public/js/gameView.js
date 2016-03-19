@@ -6,10 +6,11 @@ var $ = require('jquery');
 
 module.exports = Backbone.View.extend({
   collection: null,
-  el: // fill in class, id or tagName
-  template: // fill in _.template(),
+  tagName: 'article',
+  className: 'game-select',
+  template: _.template(templates.joinGame),
   initialize: function(){
-    // this.$el.append(this.render().el);
+    this.$el.append(this.render().el);
     this.model = new GameModel({});
   },
   render: function(){
