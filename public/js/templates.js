@@ -13,6 +13,12 @@ module.exports = {
       '</form>',
     '</div>'
   ].join(''),
+  userTemp:[
+    "<div>",
+    "<%= username =%>",
+    "<%= score =%>",
+    "</div>"
+  ].join(''),
   addForm: [
     '<div class="col-sm-6 col-sm-offset-3">',
       '<button name="newUser">create an account</button>',
@@ -24,4 +30,4 @@ module.exports = {
       '</form>',
     '</div>'
   ].join('')
-}
+};
