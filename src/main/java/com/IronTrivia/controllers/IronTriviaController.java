@@ -196,7 +196,8 @@ public class IronTriviaController {
     public List<Score> getScores(HttpSession session) {
         Game game = games.findOne((Integer) session.getAttribute("gameId"));
         return scores.findByGame(game);
-    }e
+    }
+    //
     /*may not need this route as the /score get route will give the client
     * all of the users' score as well, but here it is*/
     @RequestMapping(path = "/score/{id}", method = RequestMethod.GET)
@@ -206,7 +207,7 @@ public class IronTriviaController {
         Score score = scores.findByUserAndGame(user, game);
         return score;
     }
-
+    //
     //a method to return the players in the game specified, to avoid some code duplication
     public ArrayList<String> getPlayers(Game game) {
         List<Score> gameScores = scores.findByGame(game);
