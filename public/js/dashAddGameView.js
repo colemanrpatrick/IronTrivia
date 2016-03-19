@@ -8,7 +8,7 @@ module.exports = Backbone.View.extend({
   activeUser: null,
   collection: null,
   el: '.add-game-container',
-  template: _.template(tmpl.createNewGame),
+  template: _.template(tmpl.newGameForm),
   initialize: function(){
     this.$el.append(this.render().el);
     this.model = new GameModel({});
@@ -20,6 +20,7 @@ module.exports = Backbone.View.extend({
   },
   events:{
     'click button[name="to-new-game-form"]': 'showForm',
+    'click button[name="submit-new-game"]': 'createGame'
   },
   showForm: function(event){
     event.preventDefault();
