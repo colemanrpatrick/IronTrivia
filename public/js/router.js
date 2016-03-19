@@ -28,13 +28,8 @@ module.exports = Backbone.Router.extend({
     }).bind(this));
   },
   dashboard: function(){
-<<<<<<< HEAD
-    console.log("this works");
-=======
     this.renderSubview();
     console.log("this works!");
-
->>>>>>> 96c5f6e1c6b21ea5fd37be45fe44b410685ebb75
   },
   renderSubview: function (subview) {
     this.subview && this.subview.remove();
