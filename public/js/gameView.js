@@ -9,7 +9,7 @@ module.exports = Backbone.View.extend({
   el: // fill in class, id or tagName
   template: // fill in _.template(),
   initialize: function(){
-    this.$el.append(this.render().el);
+    // this.$el.append(this.render().el);
     this.model = new GameModel({});
   },
   render: function(){
