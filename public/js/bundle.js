@@ -258,6 +258,17 @@ module.exports = {
   login: [
     '<div class="loginForm"></div>',
     '<div class="addUserForm"></div>'
+  ].join(''),
+  newGameForm: [
+    '<div class="col-sm-6 col-sm-offset-3">',
+      '<button name="to-new-game-form">',
+      '<form class="new-game-form hide">',
+        '<input type="text" name="player-1" placeholder="player 1">',
+        '<input type="text" name="player-2" placeholder="player 2">',
+        '<input type="text" name="player-3" placeholder="player 3">',
+        '<button type="submit">create game</button>',
+      '</form>',
+    '</div>'
   ].join('')
 };
 
