@@ -37,13 +37,16 @@ module.exports = Backbone.View.extend({
     this.activeUser.fetch().then(function(data){
       that.model.set({
         id: null,
-        player1: data.userName,
-        player2: player2,
-        player3: player3,
-        player4: player4,
+        playerNames: [
+          data.userName,
+          player2,
+          player3,
+          player4
+      ],
         scoreList: null
       });
     })
+    console.log();
   },
   createGame: function(event){
     event.preventDefault();
