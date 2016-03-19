@@ -202,7 +202,7 @@ module.exports = {
   ].join(''),
   addForm: [
     '<div class="col-sm-6 col-sm-offset-3">',
-      '<button name="newUser">New User</button>',
+      '<button class="to-adduser" name="newUser">New User</button>',
       '<form class="addUser hide">',
         '<input name="username" type="text" placeholder="User Name">',
         '<input name="password" type="password" placeholder="Password">',
