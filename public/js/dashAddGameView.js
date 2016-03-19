@@ -53,9 +53,9 @@ module.exports = Backbone.View.extend({
       that.$el.find('input').val('');
       that.model.save({}, {
         error: function(error){
-        console.log(error);
+        console.log("Game creation Error", error);
       }, success: function(data){
-        console.log(data, "Game Created");
+        console.log("Game Created", data);
         // Backbone.history.navigate("dashboard", {trigger: true, replace: true});
       }});
     });
