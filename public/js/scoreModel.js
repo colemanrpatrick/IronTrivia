@@ -8,4 +8,5 @@ module.exports =Backbone.scoreModel.extend({
   init:function(){
     console.log('score model initialized');
   }
+  // "isCorrct"  "pointValue"//
 });
