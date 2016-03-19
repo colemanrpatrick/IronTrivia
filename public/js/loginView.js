@@ -3,6 +3,7 @@ var _ = require('underscore');
 var tmpl= require('./templates');
 var LoginModel = require('./loginModel');
 var $ = require('jquery');
+var Router = require('./router');
 // fill in - require for model
 
 module.exports = Backbone.View.extend({
@@ -32,9 +33,12 @@ module.exports = Backbone.View.extend({
     });
     this.$el.find('input').val('');
     this.model.buildURL();
-    this.model.save().then((function(data){
-        console.log(data);
-    }).bind(this));
+    this.model.save({}, {error: function(error){
+      console.log(error);
+    }, success: function(data){
+      console.log(data);
+      Router.navigate("dashboard", {trigger: true, replace: true});
+    }});
   },
 
 });
