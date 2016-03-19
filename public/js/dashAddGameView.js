@@ -3,6 +3,7 @@ var _ = require('underscore');
 var tmpl= require('./templates');
 var $ = require('jquery');
 var GameModel = require('./gameModel');
+var UserModel = require('./userModel');
 
 module.exports = Backbone.View.extend({
   activeUser: null,
@@ -27,15 +28,22 @@ module.exports = Backbone.View.extend({
     this.$el.find('.new-game-form').toggleClass('hide');
   },
   buildGameModel: function(){
-    this.model.set({
-      id: null,
-      playerNames: [this.activeUser.toJSON().userName,
-        this.$el.find('input[name="player-1"]').val(),
-        this.$el.find('input[name="player-2"]').val(),
-        this.$el.find('input[name="player-3"]').val(),
-      ],
-      scoreList: null
-    });
+    var that = this;
+    var player2 = this.$el.find('input[name="player-1"]').val();
+    var player3 = this.$el.find('input[name="player-2"]').val();
+    var player4 = this.$el.find('input[name="player-3"]').val();
+    this.activeUser = new UserModel();
+    this.activeUser.setURL(sessionStorage.getItem('userID'));
+    this.activeUser.fetch().then(function(data){
+      that.model.set({
+        id: null,
+        player1: data.userName,
+        player2: player2,
+        player3: player3,
+        player4: player4,
+        scoreList: null
+      });
+    })
   },
   createGame: function(event){
     event.preventDefault();

@@ -4,9 +4,10 @@ var tmpl= require('./templates');
 var $ = require('jquery');
 var DashboardAddGameView = require('./dashAddGameView');
 var DashboardAddGameFormModel = require('./dashAddGameFormModel');
-
+var UserModel = require('./userModel');
 
 module.exports = Backbone.View.extend({
+  activeUser: null,
   collection: null,
   el: '.dashboard',
   template: _.template(tmpl.dashView),
