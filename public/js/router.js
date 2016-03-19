@@ -7,6 +7,7 @@ var LoginModel = require('./loginModel');
 var LoginView = require('./loginView');
 var UserModel = require('./userModel');
 var AddUserView = require('./addUserView');
+var LoginContainerView = require('./loginContainerView');
 
 module.exports = Backbone.Router.extend({
   subview:null,
@@ -14,12 +15,12 @@ module.exports = Backbone.Router.extend({
     "":"home",
     "home":"home",
     "dashboard": "dashboard",
-    "game": "game"
+    "game": "game",
+    "score": "score"
   },
   home:function(){
-    var LogView = new LoginView();
-    var AddUsrView = new AddUserView();
-    this.renderSubview(LogView);
+    var LogContView = new LoginContainerView();
+    this.renderSubview(LogContView);
   },
   game: function(){
     var QModel = new QuestionModel();
@@ -28,11 +29,9 @@ module.exports = Backbone.Router.extend({
     }).bind(this));
   },
   dashboard: function(){
-<<<<<<< HEAD
-    
-=======
-    console.log("this works"!);
->>>>>>> 9a88a714258cf766785e8d5622833c1fa815b8aa
+    console.log("this works!");
+    this.renderSubview();
+    console.log("this works!");
   },
   renderSubview: function (subview) {
     this.subview && this.subview.remove();

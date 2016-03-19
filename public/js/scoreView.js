@@ -1,7 +1,7 @@
 var Backbone = require('backbone');
 var tmpl = require('./templates');
 var _ = require('underscore');
-module.exports = Backbone.View.extend({
+module.exports = Backbone.scoreView.extend({
   tagName: '.userBar',
   temp: _.template(temp.score),
   init: function () {},

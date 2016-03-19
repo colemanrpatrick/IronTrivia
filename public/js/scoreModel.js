@@ -1,6 +1,6 @@
 var Backbone = require('backbone');
 
-module.exports =Backbone.Collection.extend({
+module.exports =Backbone.scoreModel.extend({
   urlRoot: '/score',
   id: null,
   model: scoreModel,

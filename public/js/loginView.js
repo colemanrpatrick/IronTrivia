@@ -2,6 +2,7 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 var tmpl= require('./templates');
 var LoginModel = require('./loginModel');
+var UserModel = require('./userModel');
 var $ = require('jquery');
 var Router = require('./router');
 
@@ -32,11 +33,13 @@ module.exports = Backbone.View.extend({
     });
     this.$el.find('input').val('');
     this.model.buildURL();
-    this.model.save({}, {error: function(error){
+    this.model.save({}, {
+      error: function(error){
       console.log(error);
     }, success: function(data){
       console.log(data);
 
+      sessionStorage.setItem('userID', data.toJSON().id);
       Backbone.history.navigate("dashboard", {trigger: true, replace: true});
 
     }});

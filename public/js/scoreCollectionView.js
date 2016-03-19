@@ -5,7 +5,7 @@ var $ = require('jquery');
 var tmpl = require('./templates');
 var scoreModel = require('./scoreModel');
 
-modules.exports = backbone.View.extend({
+modules.exports = backbone.scoreCollectionView.extend({
   el: '.userBar',
   initialize: function () {
     this.addAll();
