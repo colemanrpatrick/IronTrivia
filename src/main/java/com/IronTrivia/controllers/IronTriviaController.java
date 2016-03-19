@@ -166,7 +166,8 @@ public class IronTriviaController {
     //route to grab list of all games
     @RequestMapping(path = "/game", method = RequestMethod.GET)
     public List<Game> getGames(HttpSession session) {
-        return (List<Game>) games.findAll();
+        List<Game> list = (List<Game>) games.findAll();
+        return list;
     }
     //
     //may not need this, as the code sets the gameId attribute value every time the route to join a game is hit
