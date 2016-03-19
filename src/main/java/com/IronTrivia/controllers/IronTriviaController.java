@@ -99,11 +99,12 @@ public class IronTriviaController {
     //creates a game in the database
     @RequestMapping(path = "/game", method = RequestMethod.POST)
     public void createGame(@RequestBody Game game) {
-        game = games.save(game);
-        for (String player : game.getPlayers()) {
+        List<String> playerNames = game.getPlayerNames();
+        for (String player : playerNames) {
             User user = users.findByUserName(player);//grabbing the player from database
             scores.save(new Score(user, game));//then creating a score for that user connected to that game, this is also the user's link to the game
         }
+        games.save(game);
     }
     //
     /*asks for game id creates session for this game for user
@@ -115,8 +116,8 @@ public class IronTriviaController {
     public Game viewGame(HttpSession session) {
         Game game = games.findOne((Integer) session.getAttribute("gameId"));
         User user = users.findByUserName((String) session.getAttribute("userName"));
-        game.setPlayers(getPlayers(game));
-        for (String player : game.getPlayers()) {
+        game.setPlayerNames(getPlayers(game));
+        for (String player : game.getPlayerNames()) {
             if (!users.findByUserName(player).getHasAnswered()) {
                 return null;//i think it will be very nice to have the game returned in this route, so a null return will be our indication of someone not yet being ready
             }
@@ -129,8 +130,8 @@ public class IronTriviaController {
     public Game joinGame(@PathVariable("id") int id, HttpSession session) throws Exception {
         Game game = games.findOne(id);
         User user = users.findByUserName((String) session.getAttribute("userName"));
-        game.setPlayers(getPlayers(game));
-        for (String player : game.getPlayers()) {
+        game.setPlayerNames(getPlayers(game));
+        for (String player : game.getPlayerNames()) {
             if (!users.findByUserName(player).getReady()) {
                 return null;//i think it will be very nice to have the game returned in this route, so a null return will be our indication of someone not yet being ready
             }
@@ -209,11 +210,11 @@ public class IronTriviaController {
     }
     //
     //a method to return the players in the game specified, to avoid some code duplication
-    public ArrayList<String> getPlayers(Game game) {
+    public List<String> getPlayers(Game game) {
         List<Score> gameScores = scores.findByGame(game);
         for (Score score : gameScores) {
-            game.getPlayers().add(score.getUser().getUserName());
+            game.getPlayerNames().add(score.getUser().getUserName());
         }
-        return game.getPlayers();
+        return game.getPlayerNames();
     }
 }
