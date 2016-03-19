@@ -4,7 +4,6 @@ var tmpl= require('./templates');
 var LoginModel = require('./loginModel');
 var $ = require('jquery');
 var Router = require('./router');
-// fill in - require for model
 
 module.exports = Backbone.View.extend({
   collection: null,
@@ -37,7 +36,9 @@ module.exports = Backbone.View.extend({
       console.log(error);
     }, success: function(data){
       console.log(data);
-      Router.navigate("dashboard", {trigger: true, replace: true});
+
+      Backbone.history.navigate("dashboard", {trigger: true, replace: true});
+
     }});
   },
 
