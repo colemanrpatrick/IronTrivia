@@ -35,8 +35,8 @@ public class Score {
         return score;
     }
 
-    public void addToScore() {
-        score += 5;
+    public void addToScore(int points) {
+        score += points;
     }
 
     public User getUser() {

@@ -65,6 +65,7 @@ var _ = require('underscore');
 var tmpl= require('./templates');
 var LoginModel = require('./loginModel');
 var $ = require('jquery');
+var Router = require('./router');
 // fill in - require for model
 
 module.exports = Backbone.View.extend({
@@ -94,12 +95,17 @@ module.exports = Backbone.View.extend({
     });
     this.$el.find('input').val('');
     this.model.buildURL();
-    this.model.save();
+    this.model.save({}, {error: function(error){
+      console.log(error);
+    }, success: function(data){
+      console.log(data);
+      Router.navigate("dashboard", {trigger: true, replace: true});
+    }});
   },
 
 });
 
-},{"./loginModel":2,"./templates":8,"backbone":12,"jquery":13,"underscore":14}],4:[function(require,module,exports){
+},{"./loginModel":2,"./router":7,"./templates":8,"backbone":12,"jquery":13,"underscore":14}],4:[function(require,module,exports){
 var Backbone = require('backbone');
 var $ = require('jquery');
 var Router = require('./router');
@@ -138,7 +144,6 @@ module.exports = Backbone.View.extend({
     this.model.destroy();
   },
   initialize: function(){
-    window.glob = this.model.toJSON();
     $('.game').html(this.render().el);
   },
   render: function(){
@@ -165,6 +170,7 @@ module.exports = Backbone.Router.extend({
   routes:{
     "":"home",
     "home":"home",
+    "dashboard": "dashboard",
     "game": "game"
   },
   home:function(){
@@ -177,6 +183,9 @@ module.exports = Backbone.Router.extend({
     QModel.fetch().then((function(data){
       this.renderSubview(new QuestionView({model: QModel}));
     }).bind(this));
+  },
+  dashboard: function(){
+    
   },
   renderSubview: function (subview) {
     this.subview && this.subview.remove();
