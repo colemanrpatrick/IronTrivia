@@ -31,7 +31,11 @@ module.exports = {
     '</div>'
   ].join(''),
   login: [
-    '<div class="loginForm"></div>',
-    '<div class="addUserForm"></div>'
-  ].join('')
+    '<div class="loginForm row"></div>',
+    '<div class="addUserForm row"></div>'
+  ].join(''),
+  dashView: [
+    '<div class="join-game-container row"></div>',
+    '<div class="add-game-container row"></div>'
+  ].join(''),
 };
