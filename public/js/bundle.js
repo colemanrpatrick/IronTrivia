@@ -329,6 +329,12 @@ module.exports = Backbone.Router.extend({
 
 },{"./addUserView":1,"./dashboardView":4,"./loginContainerView":6,"./loginModel":7,"./loginView":8,"./questionModel":10,"./questionView":11,"./userCollection":14,"./userCollectionView":15,"./userModel":16,"backbone":17}],13:[function(require,module,exports){
 module.exports = {
+  header:[
+    '<div class="container">',
+      '<span><%= username %></span>',
+      '<button>logout</button>',
+    '</div>'
+  ].join(""),
   question: [
       '<div class="col-sm-8">',
         '<%=question%>',
@@ -336,7 +342,7 @@ module.exports = {
   ].join(''),
   loginForm: [
     '<div class="col-sm-6 col-sm-offset-3">',
-      '<form class="login">',
+      '<form class="login form-group">',
         '<input name="username" type="text" placeholder="User Name">',
         '<input name="password" type="password" placeholder="Password">',
         '<button class="login-button" name="login">Login</button>',
@@ -352,7 +358,7 @@ module.exports = {
   addForm: [
     '<div class="col-sm-6 col-sm-offset-3">',
       '<button name="newUser">create an account</button>',
-      '<form class="addUser hide">',
+      '<form class="addUser form-group hide">',
         '<input name="username" type="text" placeholder="User Name">',
         '<input name="password" type="password" placeholder="Password">',
         '<input name="passwordConfirm" type="password" placeholder="Confirm Password">',
@@ -371,14 +377,25 @@ module.exports = {
   newGameForm: [
     '<div class="col-sm-6 col-sm-offset-3">',
       '<button name="to-new-game-form">Create game</button>',
-      '<form class="new-game-form hide">',
+      '<form class="new-game-form form-group hide">',
         '<input type="text" name="player-1" placeholder="player 1">',
         '<input type="text" name="player-2" placeholder="player 2">',
         '<input type="text" name="player-3" placeholder="player 3">',
         '<button name="submit-new-game" type="submit">Submit</button>',
       '</form>',
     '</div>'
-  ].join('')
+  ].join(''),
+  joinGame: [
+    '<article>',
+      '<h2>game id: <%= id %></h2>',
+      '<h3>Players:</h3>',
+      '<% _.each(scoreList, function(el, idx) {)',
+      '<p><%= el.user %></p>',
+      '<% }) %>',
+      '<button>join game</button>',
+    '</article>'
+
+  ]
 };
 
 },{}],14:[function(require,module,exports){

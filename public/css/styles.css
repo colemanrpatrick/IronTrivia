@@ -41,3 +41,6 @@ input {
     margin: 0; }
   .addUserForm input {
     width: 100%; }
+
+.new-game-form input {
+  width: 100%; }
