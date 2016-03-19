@@ -4,5 +4,24 @@
   box-sizing: border-box;
 }
 body{
-  background-color:gray;
+  background-color:#efefef;
+}
+button{
+  -webkit-appearance: none;
+  border: 1px solid #DCDCDC;
+  background: white;
+  padding: 5px 15px;
+  margin-top: 10px;
+  border-radius: 5px;
+  &:focus{
+    outline:none;
+  }
+  &:hover{
+    background:lightgray;
+  }
+}
+input {
+    width: 100%;
+    margin: 1% 0;
+    padding:10px;
 }

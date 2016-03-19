@@ -1,8 +1,12 @@
-form.addUser.hide {
-    width: 50%;
-    margin: 0 auto;
-}
 
-form.addUser input {
-    width: 100%;
+.addUserForm {
+  margin: 5% 0;
+  button{
+    &:first-child{
+      background:none;
+      border:none;
+      padding:0;
+      margin:0;
+    }
+  }
 }
