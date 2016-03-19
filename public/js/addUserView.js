@@ -38,6 +38,7 @@ module.exports = Backbone.View.extend({
       });
       this.$el.find('input').val('');
       this.model.save();
+      this.$el.find('.addUser').toggleClass('hide');
     }
   },
 

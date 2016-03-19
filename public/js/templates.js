@@ -29,5 +29,9 @@ module.exports = {
         '<button name="addUser">Add User</button>',
       '</form>',
     '</div>'
+  ].join(''),
+  login: [
+    '<div class="loginForm"></div>',
+    '<div class="addUserForm"></div>'
   ].join('')
 };
