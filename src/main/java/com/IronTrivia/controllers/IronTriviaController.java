@@ -36,8 +36,12 @@ public class IronTriviaController {
     Server dbui = null;
 
     @PostConstruct
-    public void init() throws SQLException {
+    public void init() throws SQLException, PasswordStorage.CannotPerformOperationException {
         dbui = Server.createWebServer().start();
+        users.save(new User("a", PasswordStorage.createHash("a")));
+        users.save(new User("b", PasswordStorage.createHash("b")));
+        users.save(new User("c", PasswordStorage.createHash("c")));
+        users.save(new User("d", PasswordStorage.createHash("d")));
     }
 
     @PreDestroy
@@ -98,13 +102,14 @@ public class IronTriviaController {
     //this route is void, no return type, just let me know if yall want something returned
     //creates a game in the database
     @RequestMapping(path = "/game", method = RequestMethod.POST)
-    public void createGame(@RequestBody Game game) {
+    public Game createGame(@RequestBody Game game) {
         game = games.save(game);
         List<String> playerNames = game.getPlayerNames();
         for (String player : playerNames) {
             User user = users.findByUserName(player);//grabbing the player from database
             scores.save(new Score(user, game));//then creating a score for that user connected to that game, this is also the user's link to the game
         }
+        return game;
     }
     //
     /*asks for game id creates session for this game for user
