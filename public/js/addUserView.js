@@ -22,7 +22,7 @@ module.exports = Backbone.View.extend({
   },
   showAdd: function(event){
     event.preventDefault();
-    this.$el.find('.addUser').toggleClass('hide');
+    this.$el.find('.addUser').fadeIn(100).toggleClass('hide');
   },
   addUser: function(event){
     event.preventDefault();
@@ -38,7 +38,7 @@ module.exports = Backbone.View.extend({
       });
       this.$el.find('input').val('');
       this.model.save();
-      this.$el.find('.addUser').toggleClass('hide');
+      this.$el.find('.addUser').fadeOut().toggleClass('hide');
     }
   },
 
