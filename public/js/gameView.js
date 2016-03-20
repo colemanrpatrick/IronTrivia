@@ -7,7 +7,7 @@ var $ = require('jquery');
 module.exports = Backbone.View.extend({
   collection: null,
   tagName: 'article',
-  className: 'game-select',
+  className: 'game-select col-md-4',
   template: _.template(templates.joinGame),
   initialize: function(){
     this.$el.append(this.render().el);
