@@ -1,6 +1,6 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
-var tmpl= require('./templates');
+var templates = require('./templates');
 var GameModel = require('./gameModel');
 var $ = require('jquery');
 
@@ -11,10 +11,9 @@ module.exports = Backbone.View.extend({
   template: _.template(templates.joinGame),
   initialize: function(){
     this.$el.append(this.render().el);
-    this.model = new GameModel({});
   },
   render: function(){
-    var markup = this.template();
+    var markup = this.template(this.model.toJSON());
     this.$el.html(markup);
     return this;
   },

@@ -118,15 +118,8 @@ public class IronTriviaController {
     * this will return the game whenever everyone has answered and or said they
     * are ready, did this in post route since we are posting data to the server*/
     @RequestMapping(path = "/game/{id}", method = RequestMethod.GET)
-    public Game viewGame(HttpSession session) {
-        Game game = games.findOne((Integer) session.getAttribute("gameId"));
-        User user = users.findByUserName((String) session.getAttribute("userName"));
-        game.setPlayerNames(getPlayers(game));
-        for (String player : game.getPlayerNames()) {
-            if (!users.findByUserName(player).getHasAnswered()) {
-                return null;//i think it will be very nice to have the game returned in this route, so a null return will be our indication of someone not yet being ready
-            }
-        }
+    public Game getGame(@PathVariable("id") int id) {
+        Game game = games.findOne(id);
         return game;
     }
     //
@@ -138,9 +131,10 @@ public class IronTriviaController {
         game.setPlayerNames(getPlayers(game));
         for (String player : game.getPlayerNames()) {
             if (!users.findByUserName(player).getReady()) {
-                throw new Exception("everyone isn't ready");
+                throw new Exception("notReady");
             }
         }
+        session.setAttribute("gameId", id);
         return game;//if a game object is returned then everyone is ready/has answered
     }
     //
@@ -183,20 +177,37 @@ public class IronTriviaController {
     public void logout(HttpSession session) {
         session.invalidate();
     }
+    //hit this route to check if everyone is ready
+    @RequestMapping(path = "/allReady", method = RequestMethod.GET)
+    public boolean allReady(HttpSession session) {
+        boolean allAnswered;
+        Game game = games.findOne((Integer) session.getAttribute("gameId"));
+        User user = users.findByUserName((String) session.getAttribute("userName"));
+        game.setPlayerNames(getPlayers(game));
+        for (String player : game.getPlayerNames()) {
+            if (!users.findByUserName(player).getHasAnswered()) {
+                allAnswered = false;
+                return allAnswered;
+            }
+        }
+        allAnswered = true;
+        return allAnswered;
+    }
     //
     /*when the scores are created in the create game method, the score is instantiated at 0
     * this route increments the score by 5 if the user answered correctly*/
     @RequestMapping(path = "/score", method = RequestMethod.PUT)
-    public Score updateScore(@RequestBody HashMap data, HttpSession session) {
+    public Score updateScore(@RequestBody Score score, HttpSession session) {
         Game game = games.findOne((Integer) session.getAttribute("gameId"));
         User user = users.findByUserName((String) session.getAttribute("userName"));
-        Score score = scores.findByUserAndGame(user, game);
-        if ((Boolean)data.get("isCorrect")) {
-            score.addToScore((Integer) data.get("pointValue"));//adds 5 to the user's score for this game if they had the correct answer
+        game.setPlayerNames(getPlayers(game));
+        Score score2 = scores.findByUserAndGame(user, game);
+        if (score.isCorrect()) {
+            score2.addToScore(score.getScore());//adds 5 to the user's score for this game if they had the correct answer
         }
         user.setHasAnswered(false);
         users.save(user);
-        scores.save(score);
+        scores.save(score2);
         return score;
     }
     //
