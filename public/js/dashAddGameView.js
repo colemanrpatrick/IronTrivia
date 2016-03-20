@@ -25,7 +25,7 @@ module.exports = Backbone.View.extend({
   },
   showForm: function(event){
     event.preventDefault();
-    this.$el.find('.new-game-form').toggleClass('hide');
+    this.$el.find('.new-game-form').fadeIn().toggleClass('hide');
   },
   buildGameModel: function(){
 
@@ -53,9 +53,9 @@ module.exports = Backbone.View.extend({
       that.$el.find('input').val('');
       that.model.save({}, {
         error: function(error){
-        console.log(error);
+        console.log("Game creation Error", error);
       }, success: function(data){
-        console.log(data, "Game Created");
+        console.log("Game Created", data);
         // Backbone.history.navigate("dashboard", {trigger: true, replace: true});
       }});
     });

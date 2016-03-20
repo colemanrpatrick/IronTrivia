@@ -9,6 +9,8 @@ var UserModel = require('./userModel');
 var AddUserView = require('./addUserView');
 var LoginContainerView = require('./loginContainerView');
 var DashboardView = require('./dashboardView');
+var GameCollection = require('./gameCollection');
+var GameCollectionView = require('./gameCollectionView');
 
 module.exports = Backbone.Router.extend({
   subview:null,

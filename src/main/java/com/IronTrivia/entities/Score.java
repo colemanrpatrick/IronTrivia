@@ -1,5 +1,7 @@
 package com.IronTrivia.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -13,9 +15,10 @@ public class Score {
     @GeneratedValue
     private int id;
     @NotNull
-    private int score = 0;
+    int score = 0;
     @ManyToOne
     private User user;
+    @JsonIgnore
     @ManyToOne
     private Game game;
 
