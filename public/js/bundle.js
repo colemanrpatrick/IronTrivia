@@ -239,7 +239,7 @@ var $ = require('jquery');
 module.exports = Backbone.View.extend({
   collection: null,
   tagName: 'article',
-  className: 'game-select',
+  className: 'game-select col-md-4',
   template: _.template(templates.joinGame),
   initialize: function(){
     this.$el.append(this.render().el);
@@ -513,6 +513,7 @@ module.exports = {
     '<div class="addUserForm row"></div>'
   ].join(''),
   dashView: [
+    '<h1>Games Available</h1>',
     '<div class="join-game-container row"></div>',
     '<div class="add-game-container row"></div>'
   ].join(''),
@@ -528,14 +529,14 @@ module.exports = {
     '</div>'
   ].join(''),
   joinGame: [
-    '<article class="col-md-4">',
+    '<div>',
       '<h2>game id: <%= id %></h2>',
       '<h3>Players:</h3>',
       '<% obj.scoreList.forEach(function(el){%>',
       '<p><%= el.user.userName %></p>',
       '<% }) %>',
-      '<button name="join-game">Join game</button>',
-    '</article>'
+      '<button name="join-game">start game</button>',
+    '</div>'
   ].join(''),
   gameView: [
     '<div class="question-view row"></div>',
