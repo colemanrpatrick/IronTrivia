@@ -25,7 +25,7 @@ module.exports = Backbone.View.extend({
   },
   showForm: function(event){
     event.preventDefault();
-    this.$el.find('.new-game-form').toggleClass('hide');
+    this.$el.find('.new-game-form').fadeIn().toggleClass('hide');
   },
   buildGameModel: function(){
 

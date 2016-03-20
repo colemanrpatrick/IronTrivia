@@ -1,11 +1,21 @@
 .login {
-  form{
-  margin:3% 0;
+  h1{
+    text-align:center;
+    font-weight:800;
+    padding:5% 0 3% 0;
+    text-transform:uppercase;
+    color:white;
   }
-  input{
-    width:49%;
-    &:first-child {
-    margin-right: 5px;
+  input {
+      background: rgba(10, 52, 88, 0.2);
+      color: white;
+      transition: .2s all;
+      &:focus{
+        padding:20px;
+        font-size:18px;
+      }
+      &::-webkit-input-placeholder{
+      color:rgba(252, 253, 255, 0.5);
+      }
     }
-  }
 }

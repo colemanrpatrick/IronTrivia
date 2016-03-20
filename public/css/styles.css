@@ -4,43 +4,85 @@
   box-sizing: border-box; }
 
 body {
-  background-color: #efefef; }
+  background-color: #00838F;
+  font-family: 'Catamaran', sans-serif; }
 
 button {
   -webkit-appearance: none;
-  border: 1px solid #DCDCDC;
-  background: white;
-  padding: 5px 15px;
+  border: none;
+  background: rgba(255, 255, 255, 0.23);
+  padding: 10px 0px;
   margin-top: 10px;
-  border-radius: 5px; }
+  border-radius: 5px;
+  color: white;
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+  transition: .2s all; }
   button:focus {
     outline: none; }
   button:hover {
-    background: lightgray; }
+    background: rgba(22, 52, 76, 0.15); }
 
 input {
-  margin: 1% 0;
-  padding: 10px; }
+  margin-bottom: 15px;
+  padding: 10px;
+  border: none; }
   input:focus {
     outline: none; }
 
-.login form {
-  margin: 3% 0; }
+.login h1 {
+  text-align: center;
+  font-weight: 800;
+  padding: 5% 0 3% 0;
+  text-transform: uppercase;
+  color: white; }
 
 .login input {
-  width: 49%; }
-  .login input:first-child {
-    margin-right: 5px; }
+  background: rgba(10, 52, 88, 0.2);
+  color: white;
+  transition: .2s all; }
+  .login input:focus {
+    padding: 20px;
+    font-size: 18px; }
+  .login input::-webkit-input-placeholder {
+    color: rgba(252, 253, 255, 0.5); }
 
-.addUserForm {
-  margin: 5% 0; }
-  .addUserForm button:first-child {
-    background: none;
-    border: none;
-    padding: 0;
-    margin: 0; }
-  .addUserForm input {
-    width: 100%; }
+.addUser {
+  background: #fff;
+  padding: 20px;
+  transition: .2s all; }
+  .addUser input {
+    background: rgba(0, 131, 143, 0.15);
+    color: #00838F; }
+    .addUser input::-webkit-input-placeholder {
+      color: #90ACAF; }
 
-.new-game-form input {
-  width: 100%; }
+.addUser button {
+  background-color: #83CAD2; }
+  .addUser button:hover {
+    background: #4AA8B3; }
+
+.addUserForm button:first-child {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 15px; }
+
+.add-game-container {
+  margin-top: 5%; }
+
+.new-game-form {
+  margin: 10% 0; }
+  .new-game-form input {
+    background: rgba(10, 52, 88, 0.2);
+    color: white;
+    transition: .2s all; }
+    .new-game-form input:focus {
+      padding: 20px;
+      font-size: 18px; }
+    .new-game-form input::-webkit-input-placeholder {
+      color: rgba(252, 253, 255, 0.5); }
