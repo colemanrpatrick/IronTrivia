@@ -9,15 +9,16 @@ var GameCollection = require('./gameCollection');
 var GameCollectionView = require('./gameCollectionView');
 
 module.exports = Backbone.View.extend({
-  activeUser: null,
   collection: null,
   el: '.dashboard',
   template: _.template(template.dashView),
   initialize: function(){
+    that = this;
     this.$el.append(this.render().el);
     var GameCol = new GameCollection();
     GameCol.fetch().then((function(data){
-      var GameCollView = new GameCollectionView({collection: GameCol});
+      var user = new UserModel({model: JSON.parse(sessionStorage.getItem('user'))});
+      var GameCollView = new GameCollectionView({collection: GameCol,model: user})
       var DashAddFormView = new DashboardAddGameView({collection: GameCol});
     }));
   },

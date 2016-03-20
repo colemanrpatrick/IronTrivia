@@ -65,7 +65,6 @@ var GameModel = require('./gameModel');
 var UserModel = require('./userModel');
 
 module.exports = Backbone.View.extend({
-  activeUser: null,
   collection: null,
   el: '.add-game-container',
   template: _.template(tmpl.newGameForm),
@@ -92,32 +91,28 @@ module.exports = Backbone.View.extend({
     var player2 = this.$el.find('input[name="player-1"]').val();
     var player3 = this.$el.find('input[name="player-2"]').val();
     var player4 = this.$el.find('input[name="player-3"]').val();
-    this.activeUser = new UserModel();
-    this.activeUser.setURL(sessionStorage.getItem('userID'));
-    this.activeUser.fetch().then(function(data){
-      that.model.set({
-        id: null,
-        playerNames: [
-          data.userName,
-          player2,
-          player3,
-          player4
-      ],
-        scoreList: null
-      });
-      that.$el.find('input').val('');
-      that.model.save({}, {
-        error: function(error){
-        console.log("Game creation Error", error);
-      }, success: function(data){
-        console.log("Game Created", data);
-        that.model.fetch().then(function(){
-          that.collection.add(that.model);
-          that.model = new GameModel({});
-        });
-      }});
+    that.model.set({
+      id: null,
+      playerNames: [
+        JSON.parse(sessionStorage.getItem('user')).userName,
+        player2,
+        player3,
+        player4
+    ],
+      scoreList: null
     });
-  }
+    that.$el.find('input').val('');
+    that.model.save({}, {
+      error: function(error){
+      console.log("Game creation Error", error);
+    }, success: function(data){
+      console.log("Game Created", data);
+      that.model.fetch().then(function(){
+        that.collection.add(that.model);
+        that.model = new GameModel({});
+      });
+      }});
+    }
 });
 
 },{"./gameModel":8,"./templates":17,"./userModel":20,"backbone":21,"jquery":22,"underscore":23}],4:[function(require,module,exports){
@@ -132,15 +127,16 @@ var GameCollection = require('./gameCollection');
 var GameCollectionView = require('./gameCollectionView');
 
 module.exports = Backbone.View.extend({
-  activeUser: null,
   collection: null,
   el: '.dashboard',
   template: _.template(template.dashView),
   initialize: function(){
+    that = this;
     this.$el.append(this.render().el);
     var GameCol = new GameCollection();
     GameCol.fetch().then((function(data){
-      var GameCollView = new GameCollectionView({collection: GameCol});
+      var user = new UserModel({model: JSON.parse(sessionStorage.getItem('user'))});
+      var GameCollView = new GameCollectionView({collection: GameCol,model: user})
       var DashAddFormView = new DashboardAddGameView({collection: GameCol});
     }));
   },
@@ -237,6 +233,7 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 var templates = require('./templates');
 var GameModel = require('./gameModel');
+var UserModel = require('./userModel');
 var $ = require('jquery');
 
 module.exports = Backbone.View.extend({
@@ -252,7 +249,27 @@ module.exports = Backbone.View.extend({
   },
   joinGame: function(event){
     event.preventDefault();
-    Backbone.history.navigate("game", {trigger: true, replace: true});
+    that = this;
+    var user = new UserModel(JSON.parse(sessionStorage.getItem('user')));
+    console.log(user.model);
+    user.set({
+      isReady: true
+    });
+    user.setURL(user.toJSON().id);
+    user.save({},{
+      error: function(error){
+        console.log("UserError", error);
+      },
+      success: function(data){
+        console.log("UserSuccess", data);
+        that.model.setURL(this.model.toJSON().id);
+        setInterval(500, function(){
+          if(this.model.save()){
+            Backbone.history.navigate("game", {trigger: true, replace: true});
+          }
+        });
+      }
+    });
   },
   render: function(){
     var markup = this.template(this.model.toJSON());
@@ -262,7 +279,7 @@ module.exports = Backbone.View.extend({
 
 });
 
-},{"./gameModel":8,"./templates":17,"backbone":21,"jquery":22,"underscore":23}],10:[function(require,module,exports){
+},{"./gameModel":8,"./templates":17,"./userModel":20,"backbone":21,"jquery":22,"underscore":23}],10:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var tmpl= require('./templates');
@@ -344,7 +361,7 @@ module.exports = Backbone.View.extend({
       console.log(error);
       {""}
     }, success: function(data){
-      sessionStorage.setItem('userID', data.toJSON().id);
+      sessionStorage.setItem('user', JSON.stringify(data));
       Backbone.history.navigate("dashboard", {trigger: true, replace: true});
     }});
   },
@@ -414,6 +431,7 @@ var DashboardView = require('./dashboardView');
 var GameCollection = require('./gameCollection');
 var GameCollectionView = require('./gameCollectionView');
 var GameContainerView = require('./gameContainerView');
+var UserModel = require('./userModel');
 
 module.exports = Backbone.Router.extend({
   subview:null,
@@ -428,13 +446,13 @@ module.exports = Backbone.Router.extend({
     this.renderSubview(LogContView);
   },
   game: function(){
-    if(sessionStorage.getItem('userID')) {
+    if(sessionStorage.getItem('user')) {
       var GameContView = new GameContainerView();
       this.renderSubview(GameContainerView);
     }
   },
   dashboard: function(){
-    if(sessionStorage.getItem('userID')){
+    if(sessionStorage.getItem('user')){
       var DashView = new DashboardView();
       this.renderSubview(DashView);
     }
