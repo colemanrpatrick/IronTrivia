@@ -251,23 +251,26 @@ module.exports = Backbone.View.extend({
     event.preventDefault();
     that = this;
     var user = new UserModel(JSON.parse(sessionStorage.getItem('user')));
-    console.log(user.model);
     user.set({
       isReady: true
     });
-    user.setURL(user.toJSON().id);
     user.save({},{
       error: function(error){
         console.log("UserError", error);
       },
       success: function(data){
         console.log("UserSuccess", data);
-        that.model.setURL(this.model.toJSON().id);
-        setInterval(500, function(){
-          if(this.model.save()){
-            Backbone.history.navigate("game", {trigger: true, replace: true});
-          }
-        });
+        window.setInterval(function(){
+          $.ajax({
+            url: '/game/' + that.model.toJSON().id,
+            method: 'POST',
+            success: function(data){
+              if(data){
+                Backbone.history.navigate("game", {trigger: true, replace: true});
+              }
+            }
+          });
+        }, 500);
       }
     });
   },
