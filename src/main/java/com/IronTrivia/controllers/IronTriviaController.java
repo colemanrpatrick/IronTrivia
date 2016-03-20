@@ -138,7 +138,7 @@ public class IronTriviaController {
         game.setPlayerNames(getPlayers(game));
         for (String player : game.getPlayerNames()) {
             if (!users.findByUserName(player).getReady()) {
-                return null;//i think it will be very nice to have the game returned in this route, so a null return will be our indication of someone not yet being ready
+                throw new Exception("everyone isn't ready");
             }
         }
         return game;//if a game object is returned then everyone is ready/has answered
@@ -155,7 +155,6 @@ public class IronTriviaController {
         Score winningScore = scores.findFirstByGameOrderByScoreDesc(game);//grabs the user with the highest score
         session.removeAttribute("gameId");
         //had to store the winner since i cant grab it after the game is deleted
-        scores.deleteByGame(game);//want to change the game deletion to cascade and delete the scores associated wiht it, to get rid of this line
         games.delete(id);
         user.setHasAnswered(false);
         user.setReady(false);
@@ -188,12 +187,12 @@ public class IronTriviaController {
     /*when the scores are created in the create game method, the score is instantiated at 0
     * this route increments the score by 5 if the user answered correctly*/
     @RequestMapping(path = "/score", method = RequestMethod.PUT)
-    public Score updateScore(@RequestBody HashMap map, HttpSession session) {
+    public Score updateScore(@RequestBody HashMap data, HttpSession session) {
         Game game = games.findOne((Integer) session.getAttribute("gameId"));
         User user = users.findByUserName((String) session.getAttribute("userName"));
         Score score = scores.findByUserAndGame(user, game);
-        if ((Boolean)map.get("isCorrect")) {
-            score.addToScore((Integer)map.get("pointValue"));//adds 5 to the user's score for this game if they had the correct answer
+        if ((Boolean)data.get("isCorrect")) {
+            score.addToScore((Integer)data.get("pointValue"));//adds 5 to the user's score for this game if they had the correct answer
         }
         user.setHasAnswered(false);
         users.save(user);
@@ -221,8 +220,9 @@ public class IronTriviaController {
     }
     //
     //a method to return the players in the game specified, to avoid some code duplication
-    public List<String> getPlayers(Game game) {
+    public ArrayList<String> getPlayers(Game game) {
         List<Score> gameScores = scores.findByGame(game);
+        game.setPlayerNames(new ArrayList<String>());
         for (Score score : gameScores) {
             game.getPlayerNames().add(score.getUser().getUserName());
         }
