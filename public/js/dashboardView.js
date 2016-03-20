@@ -15,9 +15,11 @@ module.exports = Backbone.View.extend({
   template: _.template(tmpl.dashView),
   initialize: function(){
     this.$el.append(this.render().el);
-    var DashAddFormView = new DashboardAddGameView();
     var GameCol = new GameCollection();
-    GameCol.fetch(); 
+    GameCol.fetch().then((function(data){
+      var GameCollView = new GameCollectionView({collection: GameCol});
+      var DashAddFormView = new DashboardAddGameView({collection: GameCol});
+    }));
   },
   render: function(){
     var markup = this.template();
