@@ -64,7 +64,12 @@ module.exports = {
       '<% obj.scoreList.forEach(function(el){%>',
       '<p><%= el.user.userName %></p>',
       '<% }) %>',
-      '<button>Join game</button>',
+      '<button name="join-game">Join game</button>',
     '</article>'
+  ].join(''),
+  gameView: [
+    '<div class="question-view row"></div>',
+    '<div class="answer-view"></div>',
+    '<div class="score-view"></div>'
   ].join('')
 };

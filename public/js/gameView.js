@@ -12,12 +12,17 @@ module.exports = Backbone.View.extend({
   initialize: function(){
     this.$el.append(this.render().el);
   },
+  events: {
+    'click button[name="join-game"]': 'joinGame'
+  },
+  joinGame: function(event){
+    event.preventDefault();
+    Backbone.history.navigate("game", {trigger: true, replace: true});
+  },
   render: function(){
     var markup = this.template(this.model.toJSON());
     this.$el.html(markup);
     return this;
   },
-  events:{
-    // fill in 'listener delegator': 'function',
-  }
+
 });
