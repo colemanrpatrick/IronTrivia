@@ -1,15 +1,32 @@
-
-.addUserForm {
-  margin: 5% 0;
-  button{
-    &:first-child{
-      background:none;
-      border:none;
-      padding:0;
-      margin:0;
+.addUser {
+  background: #fff;
+  padding: 20px;
+  transition:.2s all;
+  input {
+    background: rgba(0, 131, 143, 0.15);
+    color:#00838F;
+    &::-webkit-input-placeholder {
+    color: #90ACAF;
     }
   }
-  input{
-    width:100%;
+}
+.addUser button {
+background-color: #83CAD2;
+&:hover{
+  background:#4AA8B3;
+}
+}
+.addUserForm {
+  button{
+
+  &:first-child{
+    background:none;
+    border:none;
+    padding:0;
+    margin:0;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 15px;
+    }
   }
 }
