@@ -27,10 +27,6 @@ module.exports = Backbone.View.extend({
     event.preventDefault();
     this.$el.find('.new-game-form').fadeIn().toggleClass('hide');
   },
-  buildGameModel: function(){
-
-    console.log();
-  },
   createGame: function(event){
     event.preventDefault();
     var that = this;
@@ -56,7 +52,10 @@ module.exports = Backbone.View.extend({
         console.log("Game creation Error", error);
       }, success: function(data){
         console.log("Game Created", data);
-        // Backbone.history.navigate("dashboard", {trigger: true, replace: true});
+        that.model.fetch().then(function(){
+          that.collection.add(that.model);
+          that.model = new GameModel({});
+        });
       }});
     });
   }
