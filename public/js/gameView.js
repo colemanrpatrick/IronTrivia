@@ -8,7 +8,7 @@ var $ = require('jquery');
 module.exports = Backbone.View.extend({
   collection: null,
   tagName: 'article',
-  className: 'game-select',
+  className: 'game-select col-md-4',
   template: _.template(templates.joinGame),
   initialize: function(){
     this.$el.append(this.render().el);
@@ -29,13 +29,14 @@ module.exports = Backbone.View.extend({
       },
       success: function(data){
         console.log("UserSuccess", data);
-        window.setInterval(function(){
+        var interval = window.setInterval(function(){
           $.ajax({
             url: '/game/' + that.model.toJSON().id,
             method: 'POST',
             success: function(data){
               if(data){
                 Backbone.history.navigate("game", {trigger: true, replace: true});
+                window.clearInterval(interval);
               }
             }
           });
