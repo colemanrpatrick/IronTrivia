@@ -21,6 +21,8 @@ public class Score {
     @JsonIgnore
     @ManyToOne
     private Game game;
+    @Transient
+    boolean isCorrect;
 
     public Score() {
     }
@@ -30,12 +32,24 @@ public class Score {
         this.game = game;
     }
 
+    public boolean isCorrect() {
+        return isCorrect;
+    }
+
+    public void setCorrect(boolean correct) {
+        isCorrect = correct;
+    }
+
     public int getId() {
         return id;
     }
 
     public int getScore() {
         return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public void addToScore(int points) {
