@@ -3,6 +3,7 @@ package com.IronTrivia.entities;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by alexanderhughes on 3/17/16.

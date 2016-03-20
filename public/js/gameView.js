@@ -2,6 +2,7 @@ var Backbone = require('backbone');
 var _ = require('underscore');
 var templates = require('./templates');
 var GameModel = require('./gameModel');
+var UserModel = require('./userModel');
 var $ = require('jquery');
 
 module.exports = Backbone.View.extend({
@@ -17,7 +18,30 @@ module.exports = Backbone.View.extend({
   },
   joinGame: function(event){
     event.preventDefault();
-    Backbone.history.navigate("game", {trigger: true, replace: true});
+    that = this;
+    var user = new UserModel(JSON.parse(sessionStorage.getItem('user')));
+    user.set({
+      isReady: true
+    });
+    user.save({},{
+      error: function(error){
+        console.log("UserError", error);
+      },
+      success: function(data){
+        console.log("UserSuccess", data);
+        window.setInterval(function(){
+          $.ajax({
+            url: '/game/' + that.model.toJSON().id,
+            method: 'POST',
+            success: function(data){
+              if(data){
+                Backbone.history.navigate("game", {trigger: true, replace: true});
+              }
+            }
+          });
+        }, 500);
+      }
+    });
   },
   render: function(){
     var markup = this.template(this.model.toJSON());
