@@ -7,12 +7,13 @@
     color:white;
   }
   input {
-      background: rgba(10, 52, 88, 0.2);
+      background: #2F3F40;
       color: white;
       transition: .2s all;
       &:focus{
         padding:20px;
         font-size:18px;
+        border-left:3px solid #00D48A;
       }
       &::-webkit-input-placeholder{
       color:rgba(252, 253, 255, 0.5);

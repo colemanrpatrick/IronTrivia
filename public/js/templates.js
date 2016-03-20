@@ -43,6 +43,7 @@ module.exports = {
     '<div class="addUserForm row"></div>'
   ].join(''),
   dashView: [
+    '<h1>Games Available</h1>',
     '<div class="join-game-container row"></div>',
     '<div class="add-game-container row"></div>'
   ].join(''),

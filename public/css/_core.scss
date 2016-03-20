@@ -4,26 +4,26 @@
   box-sizing: border-box;
 }
 body{
-  background-color:#00838F;
+  background-color:#394748;
   font-family: 'Catamaran', sans-serif;
 }
 button{
   -webkit-appearance: none;
   border: none;
-  background: rgba(255, 255, 255, 0.23);
+  background: #fff;
   padding: 10px 0px;
   margin-top: 10px;
-  border-radius: 5px;
-  color:white;
+  color:#394748;
   width:100%;
   text-align:center;
   font-size:16px;
+  font-weight: 600;
   transition:.2s all;
   &:focus{
     outline:none;
   }
   &:hover{
-    background:rgba(22, 52, 76, 0.15);
+    background:#00D48A;
   }
 }
 input {
