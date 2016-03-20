@@ -38,7 +38,7 @@ module.exports = Backbone.View.extend({
       console.log(error);
       {""}
     }, success: function(data){
-      sessionStorage.setItem('userID', data.toJSON().id);
+      sessionStorage.setItem('user', JSON.stringify(data));
       Backbone.history.navigate("dashboard", {trigger: true, replace: true});
     }});
   },

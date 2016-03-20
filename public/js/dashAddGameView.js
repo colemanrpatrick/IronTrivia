@@ -6,7 +6,6 @@ var GameModel = require('./gameModel');
 var UserModel = require('./userModel');
 
 module.exports = Backbone.View.extend({
-  activeUser: null,
   collection: null,
   el: '.add-game-container',
   template: _.template(tmpl.newGameForm),
@@ -33,30 +32,26 @@ module.exports = Backbone.View.extend({
     var player2 = this.$el.find('input[name="player-1"]').val();
     var player3 = this.$el.find('input[name="player-2"]').val();
     var player4 = this.$el.find('input[name="player-3"]').val();
-    this.activeUser = new UserModel();
-    this.activeUser.setURL(sessionStorage.getItem('userID'));
-    this.activeUser.fetch().then(function(data){
-      that.model.set({
-        id: null,
-        playerNames: [
-          data.userName,
-          player2,
-          player3,
-          player4
-      ],
-        scoreList: null
-      });
-      that.$el.find('input').val('');
-      that.model.save({}, {
-        error: function(error){
-        console.log("Game creation Error", error);
-      }, success: function(data){
-        console.log("Game Created", data);
-        that.model.fetch().then(function(){
-          that.collection.add(that.model);
-          that.model = new GameModel({});
-        });
-      }});
+    that.model.set({
+      id: null,
+      playerNames: [
+        JSON.parse(sessionStorage.getItem('user')).userName,
+        player2,
+        player3,
+        player4
+    ],
+      scoreList: null
     });
-  }
+    that.$el.find('input').val('');
+    that.model.save({}, {
+      error: function(error){
+      console.log("Game creation Error", error);
+    }, success: function(data){
+      console.log("Game Created", data);
+      that.model.fetch().then(function(){
+        that.collection.add(that.model);
+        that.model = new GameModel({});
+      });
+      }});
+    }
 });

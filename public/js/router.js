@@ -12,6 +12,7 @@ var DashboardView = require('./dashboardView');
 var GameCollection = require('./gameCollection');
 var GameCollectionView = require('./gameCollectionView');
 var GameContainerView = require('./gameContainerView');
+var UserModel = require('./userModel');
 
 module.exports = Backbone.Router.extend({
   subview:null,
@@ -26,13 +27,13 @@ module.exports = Backbone.Router.extend({
     this.renderSubview(LogContView);
   },
   game: function(){
-    if(sessionStorage.getItem('userID')) {
+    if(sessionStorage.getItem('user')) {
       var GameContView = new GameContainerView();
       this.renderSubview(GameContainerView);
     }
   },
   dashboard: function(){
-    if(sessionStorage.getItem('userID')){
+    if(sessionStorage.getItem('user')){
       var DashView = new DashboardView();
       this.renderSubview(DashView);
     }
