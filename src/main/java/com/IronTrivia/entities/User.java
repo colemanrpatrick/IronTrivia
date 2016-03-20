@@ -17,9 +17,9 @@ public class User {
     @NotNull
     private String passwordHash;
     @Column(nullable = true)
-    private Boolean isReady = false;
+    private Boolean isReady;
     @Column(nullable = true)
-    private Boolean hasAnswered = false;
+    private Boolean hasAnswered;
 
     public User(String userName, String passwordHash) {
         this.userName = userName;
@@ -57,8 +57,8 @@ public class User {
         return isReady;
     }
 
-    public void setReady(Boolean ready) {
-        isReady = ready;
+    public void setReady(Boolean isReady) {
+        this.isReady = isReady;
     }
 
     public Boolean getHasAnswered() {
