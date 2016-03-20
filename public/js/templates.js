@@ -17,6 +17,7 @@ module.exports = {
         '<input class="col-md-12 col-sm-12 col-xs-12" name="username" type="text" placeholder="User Name">',
         '<input class="col-md-12 col-sm-12 col-xs-12" name="password" type="password" placeholder="Password">',
         '<button class="login-button" name="login">Login</button>',
+        '<button class="login-button" name="logout">Log Out</button>',
       '</form>',
     '</div>'
   ].join(''),
@@ -64,7 +65,12 @@ module.exports = {
       '<% obj.scoreList.forEach(function(el){%>',
       '<p><%= el.user.userName %></p>',
       '<% }) %>',
-      '<button>Join game</button>',
+      '<button name="join-game">Join game</button>',
     '</article>'
+  ].join(''),
+  gameView: [
+    '<div class="question-view row"></div>',
+    '<div class="answer-view"></div>',
+    '<div class="score-view"></div>'
   ].join('')
 };

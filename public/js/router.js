@@ -11,6 +11,8 @@ var LoginContainerView = require('./loginContainerView');
 var DashboardView = require('./dashboardView');
 var GameCollection = require('./gameCollection');
 var GameCollectionView = require('./gameCollectionView');
+var GameContainerView = require('./gameContainerView');
+var UserModel = require('./userModel');
 
 module.exports = Backbone.Router.extend({
   subview:null,
@@ -26,12 +28,13 @@ module.exports = Backbone.Router.extend({
     this.renderSubview(LogContView);
   },
   game: function(){
-    var QModel = new QuestionModel();
-    QModel.fetch().then((function(data){
-      this.renderSubview(new QuestionView({model: QModel}));
-    }).bind(this));
+    if(sessionStorage.getItem('user')) {
+      var GameContView = new GameContainerView();
+      this.renderSubview(GameContainerView);
+    }
   },
   dashboard: function(){
+<<<<<<< HEAD
     console.log("this works!");
     this.renderSubview();
     console.log("this works!");
@@ -42,6 +45,12 @@ module.exports = Backbone.Router.extend({
     var DashView = new DashboardView({activeUser: user});
     this.renderSubview(DashView);
 
+=======
+    if(sessionStorage.getItem('user')){
+      var DashView = new DashboardView();
+      this.renderSubview(DashView);
+    }
+>>>>>>> 7d462b9b61d071a137a847a3330410a275b6e989
   },
   renderSubview: function (subview) {
     this.subview && this.subview.remove();

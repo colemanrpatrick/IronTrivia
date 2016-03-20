@@ -21,7 +21,13 @@ module.exports = Backbone.View.extend({
   },
   events:{
     'click button[name="login"]': 'login',
+    'click button[name="logout"]': 'logout',
   },
+  logout: function(event){
+    event.preventDefault();
+    console.log('logoutFunction');
+  },
+
   login: function(event){
     event.preventDefault();
     this.model.set({
@@ -38,9 +44,10 @@ module.exports = Backbone.View.extend({
       console.log(error);
       {""}
     }, success: function(data){
-      console.log(data);
 
-      sessionStorage.setItem('userID', data.toJSON().id);
+      console.log(data);
+      sessionStorage.setItem('user', JSON.stringify(data));
+
       Backbone.history.navigate("dashboard", {trigger: true, replace: true});
 
     }});

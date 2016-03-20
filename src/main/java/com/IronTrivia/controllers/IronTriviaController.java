@@ -17,7 +17,6 @@ import javax.annotation.PreDestroy;
 import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -125,17 +124,20 @@ public class IronTriviaController {
     //
     //this is to join the game checks if everyone else has joined
     @RequestMapping(path = "/game/{id}", method = RequestMethod.POST)
-    public Game joinGame(@PathVariable("id") int id, HttpSession session) throws Exception {
+    public boolean joinGame(@PathVariable("id") int id, HttpSession session) throws Exception {
+        boolean allReady;
         Game game = games.findOne(id);
         User user = users.findByUserName((String) session.getAttribute("userName"));
         game.setPlayerNames(getPlayers(game));
         for (String player : game.getPlayerNames()) {
-            if (!users.findByUserName(player).getReady()) {
-                throw new Exception("notReady");
+            if (!users.findByUserName(player).getIsReady()) {
+                allReady = false;
+                return allReady;
             }
         }
         session.setAttribute("gameId", id);
-        return game;//if a game object is returned then everyone is ready/has answered
+        allReady = true;
+        return allReady;//if a game object is returned then everyone is ready/has answered
     }
     //
     /*this route removes the game from the session and deletes the game
@@ -151,7 +153,7 @@ public class IronTriviaController {
         //had to store the winner since i cant grab it after the game is deleted
         games.delete(id);
         user.setHasAnswered(false);
-        user.setReady(false);
+        user.setIsReady(false);
         users.save(user);
         return winningScore;
     }
@@ -169,7 +171,7 @@ public class IronTriviaController {
         session.removeAttribute("gameId");
         User user = users.findByUserName((String) session.getAttribute("userName"));
         user.setHasAnswered(false);
-        user.setReady(false);
+        user.setIsReady(false);
         users.save(user);
     }
     //
@@ -178,7 +180,8 @@ public class IronTriviaController {
         session.invalidate();
     }
     //hit this route to check if everyone is ready
-    @RequestMapping(path = "/allReady", method = RequestMethod.GET)
+
+    @RequestMapping(path = "/allAnswered", method = RequestMethod.GET)
     public boolean allReady(HttpSession session) {
         boolean allAnswered;
         Game game = games.findOne((Integer) session.getAttribute("gameId"));
