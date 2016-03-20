@@ -36,6 +36,7 @@ module.exports = Backbone.View.extend({
     this.model.save({}, {
       error: function(error){
       console.log(error);
+      {""}
     }, success: function(data){
       console.log(data);
 

@@ -14,8 +14,8 @@ public class Game {
     @GeneratedValue
     private int id;
     @Transient
-    private ArrayList<String> playerNames;
-    @OneToMany(mappedBy = "score")
+    private List<String> playerNames;
+    @OneToMany(mappedBy = "game")
     List<Score> scoreList;
 
     public Game() {
@@ -26,11 +26,11 @@ public class Game {
 
     }
 
-    public ArrayList<String> getPlayerNames() {
+    public List<String> getPlayerNames() {
         return playerNames;
     }
 
-    public void setPlayerNames(ArrayList<String> playerNames) {
+    public void setPlayerNames(List<String> playerNames) {
         this.playerNames = playerNames;
     }
 
@@ -40,13 +40,5 @@ public class Game {
 
     public void setScoreList(List<Score> scoreList) {
         this.scoreList = scoreList;
-    }
-
-    public ArrayList<String> getPlayers() {
-        return playerNames;
-    }
-
-    public void setPlayers(ArrayList<String> playerNames) {
-        this.playerNames = playerNames;
     }
 }

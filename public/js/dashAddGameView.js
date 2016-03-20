@@ -28,6 +28,11 @@ module.exports = Backbone.View.extend({
     this.$el.find('.new-game-form').toggleClass('hide');
   },
   buildGameModel: function(){
+
+    console.log();
+  },
+  createGame: function(event){
+    event.preventDefault();
     var that = this;
     var player2 = this.$el.find('input[name="player-1"]').val();
     var player3 = this.$el.find('input[name="player-2"]').val();
@@ -37,25 +42,22 @@ module.exports = Backbone.View.extend({
     this.activeUser.fetch().then(function(data){
       that.model.set({
         id: null,
-        player1: data.userName,
-        player2: player2,
-        player3: player3,
-        player4: player4,
+        playerNames: [
+          data.userName,
+          player2,
+          player3,
+          player4
+      ],
         scoreList: null
       });
-    })
-  },
-  createGame: function(event){
-    event.preventDefault();
-    this.buildGameModel();
-    this.$el.find('input').val('');
-    this.model.save({}, {
-      error: function(error){
-      console.log(error);
-    }, success: function(data){
-      console.log(data, "Game Created");
-      // Backbone.history.navigate("dashboard", {trigger: true, replace: true});
-    }});
-  },
-
+      that.$el.find('input').val('');
+      that.model.save({}, {
+        error: function(error){
+        console.log(error);
+      }, success: function(data){
+        console.log(data, "Game Created");
+        // Backbone.history.navigate("dashboard", {trigger: true, replace: true});
+      }});
+    });
+  }
 });
