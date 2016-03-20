@@ -14,8 +14,8 @@ public class Game {
     @GeneratedValue
     private int id;
     @Transient
-    private List<String> playerNames;
-    @OneToMany(mappedBy = "game")
+    private ArrayList<String> playerNames;
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Score> scoreList;
 
     public Game() {
@@ -26,11 +26,15 @@ public class Game {
 
     }
 
-    public List<String> getPlayerNames() {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public ArrayList<String> getPlayerNames() {
         return playerNames;
     }
 
-    public void setPlayerNames(List<String> playerNames) {
+    public void setPlayerNames(ArrayList<String> playerNames) {
         this.playerNames = playerNames;
     }
 
