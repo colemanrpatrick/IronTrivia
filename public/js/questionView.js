@@ -6,8 +6,7 @@ var QuestionModel = require('./questionModel');
 
 module.exports = Backbone.View.extend({
   model: null,
-  tagName: 'div',
-  className: 'row',
+  el: '.question-view',
   template: _.template(templates.question),
   events: {
 
