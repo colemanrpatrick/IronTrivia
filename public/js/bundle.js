@@ -45,7 +45,7 @@ module.exports = Backbone.View.extend({
 
 });
 
-},{"./templates":15,"./userModel":18,"backbone":19,"jquery":20,"underscore":21}],2:[function(require,module,exports){
+},{"./templates":17,"./userModel":20,"backbone":21,"jquery":22,"underscore":23}],2:[function(require,module,exports){
 var Backbone = require('backbone');
 
 module.exports = Backbone.Model.extend({
@@ -56,7 +56,7 @@ module.exports = Backbone.Model.extend({
   }
 });
 
-},{"backbone":19}],3:[function(require,module,exports){
+},{"backbone":21}],3:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var tmpl= require('./templates');
@@ -86,10 +86,6 @@ module.exports = Backbone.View.extend({
     event.preventDefault();
     this.$el.find('.new-game-form').fadeIn().toggleClass('hide');
   },
-  buildGameModel: function(){
-
-    console.log();
-  },
   createGame: function(event){
     event.preventDefault();
     var that = this;
@@ -115,16 +111,19 @@ module.exports = Backbone.View.extend({
         console.log("Game creation Error", error);
       }, success: function(data){
         console.log("Game Created", data);
-        // Backbone.history.navigate("dashboard", {trigger: true, replace: true});
+        that.model.fetch().then(function(){
+          that.collection.add(that.model);
+          that.model = new GameModel({});
+        });
       }});
     });
   }
 });
 
-},{"./gameModel":7,"./templates":15,"./userModel":18,"backbone":19,"jquery":20,"underscore":21}],4:[function(require,module,exports){
+},{"./gameModel":8,"./templates":17,"./userModel":20,"backbone":21,"jquery":22,"underscore":23}],4:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
-var tmpl= require('./templates');
+var template = require('./templates');
 var $ = require('jquery');
 var DashboardAddGameView = require('./dashAddGameView');
 var DashboardAddGameFormModel = require('./dashAddGameFormModel');
@@ -136,12 +135,14 @@ module.exports = Backbone.View.extend({
   activeUser: null,
   collection: null,
   el: '.dashboard',
-  template: _.template(tmpl.dashView),
+  template: _.template(template.dashView),
   initialize: function(){
     this.$el.append(this.render().el);
-    var DashAddFormView = new DashboardAddGameView();
     var GameCol = new GameCollection();
-    GameCol.fetch(); 
+    GameCol.fetch().then((function(data){
+      var GameCollView = new GameCollectionView({collection: GameCol});
+      var DashAddFormView = new DashboardAddGameView({collection: GameCol});
+    }));
   },
   render: function(){
     var markup = this.template();
@@ -151,7 +152,7 @@ module.exports = Backbone.View.extend({
 
 });
 
-},{"./dashAddGameFormModel":2,"./dashAddGameView":3,"./gameCollection":5,"./gameCollectionView":6,"./templates":15,"./userModel":18,"backbone":19,"jquery":20,"underscore":21}],5:[function(require,module,exports){
+},{"./dashAddGameFormModel":2,"./dashAddGameView":3,"./gameCollection":5,"./gameCollectionView":6,"./templates":17,"./userModel":20,"backbone":21,"jquery":22,"underscore":23}],5:[function(require,module,exports){
 var Backbone = require('backbone');
 var GameModel = require('./gameModel');
 
@@ -161,18 +162,21 @@ module.exports = Backbone.Collection.extend({
   initialize: function(){}
 })
 
-},{"./gameModel":7,"backbone":19}],6:[function(require,module,exports){
+},{"./gameModel":8,"backbone":21}],6:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = require('jquery');
 var tmpl = require('./templates');
 var GameModel = require('./gameModel');
+var GameView = require('./gameView');
 
 module.exports = Backbone.View.extend({
   url: '/game',
   el: '.join-game-container',
   initialize: function () {
     this.addAll();
+    this.listenTo(this.collection, 'update', this.addAll);
+    this.listenTo(this.collection, 'change', this.addAll);
   },
   addOne: function (el) {
     var gameView = new GameView({model: el});
@@ -181,20 +185,84 @@ module.exports = Backbone.View.extend({
   addAll: function () {
     this.$el.html('');
     _.each(this.collection.models, this.addOne, this);
-  }
+  },
+
 });
 
-},{"./gameModel":7,"./templates":15,"backbone":19,"jquery":20,"underscore":21}],7:[function(require,module,exports){
+},{"./gameModel":8,"./gameView":9,"./templates":17,"backbone":21,"jquery":22,"underscore":23}],7:[function(require,module,exports){
+var Backbone = require('backbone');
+var _ = require('underscore');
+var template = require('./templates');
+var $ = require('jquery');
+var UserModel = require('./userModel');
+var GameCollection = require('./gameCollection');
+var GameCollectionView = require('./gameCollectionView');
+var QuestionModel = require('./questionModel');
+var QuestionView = require('./questionView');
+
+module.exports = Backbone.View.extend({
+  activeUser: null,
+  collection: null,
+  el: '.dashboard',
+  template: _.template(template.gameView),
+  initialize: function(){
+    this.$el.append(this.render().el);
+    var QModel = new QuestionModel();
+    QModel.fetch().then((function(data){
+      var QView = new QuestionView({model: QModel});
+    }).bind(this));
+  },
+  render: function(){
+    var markup = this.template();
+    this.$el.html(markup);
+    return this;
+  }
+
+});
+
+},{"./gameCollection":5,"./gameCollectionView":6,"./questionModel":14,"./questionView":15,"./templates":17,"./userModel":20,"backbone":21,"jquery":22,"underscore":23}],8:[function(require,module,exports){
 var Backbone = require('backbone');
 
 module.exports = Backbone.Model.extend({
   urlRoot: '/game',
   initialize: function(){
-    console.log("from game model")
+  },
+  updateURL: function(id){
+    this.urlRoot = this.urlRoot + '/' + id;
   }
 });
 
-},{"backbone":19}],8:[function(require,module,exports){
+},{"backbone":21}],9:[function(require,module,exports){
+var Backbone = require('backbone');
+var _ = require('underscore');
+var templates = require('./templates');
+var GameModel = require('./gameModel');
+var $ = require('jquery');
+
+module.exports = Backbone.View.extend({
+  collection: null,
+  tagName: 'article',
+  className: 'game-select',
+  template: _.template(templates.joinGame),
+  initialize: function(){
+    this.$el.append(this.render().el);
+  },
+  events: {
+    'click button[name="join-game"]': 'joinGame'
+  },
+  joinGame: function(event){
+    event.preventDefault();
+    Backbone.history.navigate("game", {trigger: true, replace: true});
+  },
+  render: function(){
+    var markup = this.template(this.model.toJSON());
+    this.$el.html(markup);
+    return this;
+  },
+
+});
+
+},{"./gameModel":8,"./templates":17,"backbone":21,"jquery":22,"underscore":23}],10:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var tmpl= require('./templates');
@@ -220,7 +288,7 @@ module.exports = Backbone.View.extend({
 
 });
 
-},{"./addUserView":1,"./loginModel":9,"./loginView":10,"./templates":15,"backbone":19,"jquery":20,"underscore":21}],9:[function(require,module,exports){
+},{"./addUserView":1,"./loginModel":11,"./loginView":12,"./templates":17,"backbone":21,"jquery":22,"underscore":23}],11:[function(require,module,exports){
 var Backbone = require('backbone');
 
 module.exports = Backbone.Model.extend({
@@ -235,7 +303,7 @@ module.exports = Backbone.Model.extend({
   }
 });
 
-},{"backbone":19}],10:[function(require,module,exports){
+},{"backbone":21}],12:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var tmpl= require('./templates');
@@ -283,7 +351,7 @@ module.exports = Backbone.View.extend({
 
 });
 
-},{"./loginModel":9,"./router":14,"./templates":15,"./userModel":18,"backbone":19,"jquery":20,"underscore":21}],11:[function(require,module,exports){
+},{"./loginModel":11,"./router":16,"./templates":17,"./userModel":20,"backbone":21,"jquery":22,"underscore":23}],13:[function(require,module,exports){
 var Backbone = require('backbone');
 var $ = require('jquery');
 var Router = require('./router');
@@ -293,7 +361,7 @@ $(document).ready(function () {
   Backbone.history.start({pushstate: true});
 });
 
-},{"./router":14,"backbone":19,"jquery":20}],12:[function(require,module,exports){
+},{"./router":16,"backbone":21,"jquery":22}],14:[function(require,module,exports){
 var Backbone = require('backbone');
 
 module.exports = Backbone.Model.extend({
@@ -303,7 +371,7 @@ module.exports = Backbone.Model.extend({
   }
 });
 
-},{"backbone":19}],13:[function(require,module,exports){
+},{"backbone":21}],15:[function(require,module,exports){
 var Backbone = require('backbone');
 var _ = require('underscore');
 var $ = require('jquery');
@@ -312,8 +380,7 @@ var QuestionModel = require('./questionModel');
 
 module.exports = Backbone.View.extend({
   model: null,
-  tagName: 'div',
-  className: 'row',
+  el: '.question-view',
   template: _.template(templates.question),
   events: {
 
@@ -332,7 +399,7 @@ module.exports = Backbone.View.extend({
 
 });
 
-},{"./questionModel":12,"./templates":15,"backbone":19,"jquery":20,"underscore":21}],14:[function(require,module,exports){
+},{"./questionModel":14,"./templates":17,"backbone":21,"jquery":22,"underscore":23}],16:[function(require,module,exports){
 var Backbone = require('backbone');
 var UserCollection = require('./userCollection');
 var UserCollectionView = require('./userCollectionView');
@@ -346,6 +413,7 @@ var LoginContainerView = require('./loginContainerView');
 var DashboardView = require('./dashboardView');
 var GameCollection = require('./gameCollection');
 var GameCollectionView = require('./gameCollectionView');
+var GameContainerView = require('./gameContainerView');
 
 module.exports = Backbone.Router.extend({
   subview:null,
@@ -360,14 +428,16 @@ module.exports = Backbone.Router.extend({
     this.renderSubview(LogContView);
   },
   game: function(){
-    var QModel = new QuestionModel();
-    QModel.fetch().then((function(data){
-      this.renderSubview(new QuestionView({model: QModel}));
-    }).bind(this));
+    if(sessionStorage.getItem('userID')) {
+      var GameContView = new GameContainerView();
+      this.renderSubview(GameContainerView);
+    }
   },
   dashboard: function(){
-    var DashView = new DashboardView();
-    this.renderSubview(DashView);
+    if(sessionStorage.getItem('userID')){
+      var DashView = new DashboardView();
+      this.renderSubview(DashView);
+    }
   },
   renderSubview: function (subview) {
     this.subview && this.subview.remove();
@@ -375,7 +445,8 @@ module.exports = Backbone.Router.extend({
   }
 });
 
-},{"./addUserView":1,"./dashboardView":4,"./gameCollection":5,"./gameCollectionView":6,"./loginContainerView":8,"./loginModel":9,"./loginView":10,"./questionModel":12,"./questionView":13,"./userCollection":16,"./userCollectionView":17,"./userModel":18,"backbone":19}],15:[function(require,module,exports){
+},{"./addUserView":1,"./dashboardView":4,"./gameCollection":5,"./gameCollectionView":6,"./gameContainerView":7,"./loginContainerView":10,"./loginModel":11,"./loginView":12,"./questionModel":14,"./questionView":15,"./userCollection":18,"./userCollectionView":19,"./userModel":20,"backbone":21}],17:[function(require,module,exports){
+var _ = require('underscore');
 module.exports = {
   header:[
     '<div class="container">',
@@ -435,22 +506,27 @@ module.exports = {
     '</div>'
   ].join(''),
   joinGame: [
-    '<article>',
+    '<article class="col-md-4">',
       '<h2>game id: <%= id %></h2>',
       '<h3>Players:</h3>',
-      '<% _.each(scoreList, function(el, idx) {)',
-      '<p><%= el.user %></p>',
+      '<% obj.scoreList.forEach(function(el){%>',
+      '<p><%= el.user.userName %></p>',
       '<% }) %>',
-      '<button>join game</button>',
+      '<button name="join-game">Join game</button>',
     '</article>'
+  ].join(''),
+  gameView: [
+    '<div class="question-view row"></div>',
+    '<div class="answer-view"></div>',
+    '<div class="score-view"></div>'
   ].join('')
 };
 
-},{}],16:[function(require,module,exports){
+},{"underscore":23}],18:[function(require,module,exports){
 
-},{}],17:[function(require,module,exports){
-arguments[4][16][0].apply(exports,arguments)
-},{"dup":16}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
+arguments[4][18][0].apply(exports,arguments)
+},{"dup":18}],20:[function(require,module,exports){
 var Backbone = require('backbone');
 
 module.exports = Backbone.Model.extend({
@@ -468,7 +544,7 @@ module.exports = Backbone.Model.extend({
 
 });
 
-},{"backbone":19}],19:[function(require,module,exports){
+},{"backbone":21}],21:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.3.2
 
@@ -2392,7 +2468,7 @@ module.exports = Backbone.Model.extend({
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":20,"underscore":21}],20:[function(require,module,exports){
+},{"jquery":22,"underscore":23}],22:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.2.2
  * http://jquery.com/
@@ -12236,7 +12312,7 @@ if ( !noGlobal ) {
 return jQuery;
 }));
 
-},{}],21:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -13786,4 +13862,4 @@ return jQuery;
   }
 }.call(this));
 
-},{}]},{},[11]);
+},{}]},{},[13]);

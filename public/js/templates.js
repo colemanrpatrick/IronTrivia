@@ -1,3 +1,4 @@
+var _ = require('underscore');
 module.exports = {
   header:[
     '<div class="container">',
@@ -57,13 +58,18 @@ module.exports = {
     '</div>'
   ].join(''),
   joinGame: [
-    '<article>',
+    '<article class="col-md-4">',
       '<h2>game id: <%= id %></h2>',
       '<h3>Players:</h3>',
-      '<% _.each(scoreList, function(el, idx) {)',
-      '<p><%= el.user %></p>',
+      '<% obj.scoreList.forEach(function(el){%>',
+      '<p><%= el.user.userName %></p>',
       '<% }) %>',
-      '<button>join game</button>',
+      '<button name="join-game">Join game</button>',
     '</article>'
+  ].join(''),
+  gameView: [
+    '<div class="question-view row"></div>',
+    '<div class="answer-view"></div>',
+    '<div class="score-view"></div>'
   ].join('')
 };
