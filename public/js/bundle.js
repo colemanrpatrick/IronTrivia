@@ -308,8 +308,11 @@ module.exports = Backbone.View.extend({
       console.log(error);
       {""}
     }, success: function(data){
+      console.log(data);
+
       sessionStorage.setItem('userID', data.toJSON().id);
       Backbone.history.navigate("dashboard", {trigger: true, replace: true});
+
     }});
   },
 
@@ -331,7 +334,7 @@ var Backbone = require('backbone');
 module.exports = Backbone.Model.extend({
   urlRoot: 'http://jservice.io/api/random',
   initialize: function(){
-    console.log("from question model")
+    console.log("from question model");
   }
 });
 
@@ -385,7 +388,8 @@ module.exports = Backbone.Router.extend({
     "":"home",
     "home":"home",
     "dashboard": "dashboard",
-    "game": "game"
+    "game": "game",
+    "score": "score"
   },
   home:function(){
     var LogContView = new LoginContainerView();
@@ -398,8 +402,16 @@ module.exports = Backbone.Router.extend({
     }).bind(this));
   },
   dashboard: function(){
-    var DashView = new DashboardView();
+    console.log("this works!");
+    this.renderSubview();
+    console.log("this works!");
+
+    var user = new UserModel({});
+    user.fetch({id: sessionStorage.getItem('userID')});
+    console.log(user);
+    var DashView = new DashboardView({activeUser: user});
     this.renderSubview(DashView);
+
   },
   renderSubview: function (subview) {
     this.subview && this.subview.remove();
