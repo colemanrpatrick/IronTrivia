@@ -53,12 +53,12 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
-    public Boolean getReady() {
+    public Boolean getIsReady() {
         return isReady;
     }
 
-    public void setReady(Boolean ready) {
-        isReady = ready;
+    public void setIsReady(Boolean isReady) {
+        this.isReady = isReady;
     }
 
     public Boolean getHasAnswered() {

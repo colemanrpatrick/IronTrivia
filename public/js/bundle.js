@@ -260,13 +260,14 @@ module.exports = Backbone.View.extend({
       },
       success: function(data){
         console.log("UserSuccess", data);
-        window.setInterval(function(){
+        var interval = window.setInterval(function(){
           $.ajax({
             url: '/game/' + that.model.toJSON().id,
             method: 'POST',
             success: function(data){
               if(data){
                 Backbone.history.navigate("game", {trigger: true, replace: true});
+                window.clearInterval(interval);
               }
             }
           });

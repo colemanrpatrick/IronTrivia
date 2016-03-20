@@ -130,7 +130,7 @@ public class IronTriviaController {
         User user = users.findByUserName((String) session.getAttribute("userName"));
         game.setPlayerNames(getPlayers(game));
         for (String player : game.getPlayerNames()) {
-            if (!users.findByUserName(player).getReady()) {
+            if (!users.findByUserName(player).getIsReady()) {
                 allReady = false;
                 return allReady;
             }
@@ -153,7 +153,7 @@ public class IronTriviaController {
         //had to store the winner since i cant grab it after the game is deleted
         games.delete(id);
         user.setHasAnswered(false);
-        user.setReady(false);
+        user.setIsReady(false);
         users.save(user);
         return winningScore;
     }
@@ -171,7 +171,7 @@ public class IronTriviaController {
         session.removeAttribute("gameId");
         User user = users.findByUserName((String) session.getAttribute("userName"));
         user.setHasAnswered(false);
-        user.setReady(false);
+        user.setIsReady(false);
         users.save(user);
     }
     //
