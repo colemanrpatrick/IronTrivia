@@ -15,7 +15,7 @@ public class Game {
     private int id;
     @Transient
     private ArrayList<String> playerNames;
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Score> scoreList;
 
     public Game() {

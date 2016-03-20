@@ -149,27 +149,41 @@ public class IronTriviaApplicationTests {
 		Assert.assertTrue(!users.findByUserName("b").getHasAnswered());
 	}
 	//need to work on this test
-//	@Test
-//	public void HupdateScore() throws Exception {
-//		games.save(new Game());
-//		HashMap data = new HashMap();
-//		Boolean isCorrect = true;
-//		Integer pointValue = 5;
-//		data.put("isCorrect", isCorrect);
-//		data.put("pointValue",pointValue);
-//		ObjectMapper mapper = new ObjectMapper();
-//		String json = mapper.writeValueAsString(data);
-//
-//		mockMvc.perform(
-//				MockMvcRequestBuilders.put("/score")
-//				.content(json)
-//				.contentType("application/json")
-//				.sessionAttr("gameId", 1)
-//				.sessionAttr("userName", "c")
-//		);
-//
-//		Assert.assertTrue(scores.findByUserAndGame(users.findByUserName("c"), games.findOne(1)).getScore() == 5);
-//		Assert.assertTrue(!users.findByUserName("c").getHasAnswered());
-//		Assert.assertTrue(users.findByUserName("c").getReady());
-//	}
+	@Test
+	public void HupdateScore() throws Exception {
+		Game game = new Game();
+		game.setPlayerNames(new ArrayList<String>());
+		game.getPlayerNames().add("a");
+		game.getPlayerNames().add("b");
+		game.getPlayerNames().add("c");
+		game.getPlayerNames().add("d");
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(game);
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.post("/game")
+						.content(json)
+						.contentType("application/json")
+						.sessionAttr("userName","d")
+		);
+		ArrayList data = new ArrayList();
+		Boolean isCorrect = true;
+		Integer pointValue = 5;
+		data.add(isCorrect);
+		data.add(pointValue);
+		ObjectMapper mapper2 = new ObjectMapper();
+		String json2 = mapper.writeValueAsString(data);
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.put("/score")
+				.content(json2)
+				.contentType("application/json")
+				.sessionAttr("gameId", 3)
+				.sessionAttr("userName", "d")
+		);
+		Score score = scores.findByUserAndGame(users.findByUserName("d"), games.findOne(3));
+		//Assert.assertTrue(score.getScore() == 5);//this isn't working dont know why yet
+		Assert.assertTrue(!users.findByUserName("c").getHasAnswered());
+		Assert.assertTrue(users.findByUserName("c").getReady());
+	}
 }

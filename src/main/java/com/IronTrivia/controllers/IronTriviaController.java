@@ -192,7 +192,7 @@ public class IronTriviaController {
         User user = users.findByUserName((String) session.getAttribute("userName"));
         Score score = scores.findByUserAndGame(user, game);
         if ((Boolean)data.get("isCorrect")) {
-            score.addToScore((Integer)data.get("pointValue"));//adds 5 to the user's score for this game if they had the correct answer
+            score.addToScore((Integer) data.get("pointValue"));//adds 5 to the user's score for this game if they had the correct answer
         }
         user.setHasAnswered(false);
         users.save(user);
